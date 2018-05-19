@@ -27,27 +27,27 @@ class IPSymconLuftdaten extends IPSModule
     {
         parent::Create();
 
-		$this->RegisterPropertyString('sensor_id', '');
-		$this->RegisterPropertyInteger('update_interval', 0);
-		$this->RegisterPropertyBoolean('sensor_sds', false);
-		$this->RegisterPropertyBoolean('sensor_pms', false);
-		$this->RegisterPropertyBoolean('sensor_dht22', false);
-		$this->RegisterPropertyBoolean('sensor_htu21d', false);
-		$this->RegisterPropertyBoolean('sensor_ppd', false);
-		$this->RegisterPropertyBoolean('sensor_bmp180', false);
-		$this->RegisterPropertyBoolean('sensor_bmp280', false);
-		$this->RegisterPropertyBoolean('sensor_bme280', false);
-		$this->RegisterPropertyBoolean('sensor_ds18b20', false);
+        $this->RegisterPropertyString('sensor_id', '');
+        $this->RegisterPropertyInteger('update_interval', 0);
+        $this->RegisterPropertyBoolean('sensor_sds', false);
+        $this->RegisterPropertyBoolean('sensor_pms', false);
+        $this->RegisterPropertyBoolean('sensor_dht22', false);
+        $this->RegisterPropertyBoolean('sensor_htu21d', false);
+        $this->RegisterPropertyBoolean('sensor_ppd', false);
+        $this->RegisterPropertyBoolean('sensor_bmp180', false);
+        $this->RegisterPropertyBoolean('sensor_bmp280', false);
+        $this->RegisterPropertyBoolean('sensor_bme280', false);
+        $this->RegisterPropertyBoolean('sensor_ds18b20', false);
 
-		$this->CreateVarProfile('Luftdaten.PM', IPS_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
-		$this->CreateVarProfile('Luftdaten.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-		$this->CreateVarProfile('Luftdaten.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-		$this->CreateVarProfile('Luftdaten.Pressure', IPS_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-		$this->CreateVarProfile('Luftdaten.Wifi', IPS_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
+        $this->CreateVarProfile('Luftdaten.PM', IPS_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
+        $this->CreateVarProfile('Luftdaten.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
+        $this->CreateVarProfile('Luftdaten.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
+        $this->CreateVarProfile('Luftdaten.Pressure', IPS_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Luftdaten.Wifi', IPS_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
 
-		// Inspired by module SymconTest/HookServe
-		// We need to call the RegisterHook function on Kernel READY
-		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+        // Inspired by module SymconTest/HookServe
+        // We need to call the RegisterHook function on Kernel READY
+        $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
     // Inspired by module SymconTest/HookServe
@@ -60,31 +60,31 @@ class IPSymconLuftdaten extends IPSModule
         }
     }
 
-	private function getIdents()
-	{
-		// Werte pro Sensor
-		$sensor_map = [];
-		// SDS011
-		$sensor_map['SDS011'] = [ 'SDS_P1', 'SDS_P2' ];
-		// PMS1003, PMS3003, PMS5003, PMS6003, PMS7003
-		$sensor_map['PMS'] = [ 'PMS_P0', 'PMS_P1', 'PMS_P2' ];
-		// DHT22
-		$sensor_map['DHT22'] = [ 'temperature', 'humidity' ];
-		// HTU21D
-		$sensor_map['HTU21D'] = [ 'HTU21D_temperature', 'HTU21D_humidity' ];
-		// PPD42NS
-		$sensor_map['PPD42NS'] = [ 'P1', 'P2' ]; // 'durP1', 'ratioP1', 'durP2', 'ratioP2'
-		// BMP180
-		$sensor_map['BMP180'] = [ 'BMP_temperature', 'BMP_pressure' ];
-		// BMP280
-		$sensor_map['BMP280'] = [ 'BMP_temperature', 'BMP_pressure' ];
-		// BME280
-		$sensor_map['BME280'] = [ 'BME280_temperature', 'BME280_pressure', 'BME280_humidity' ];
-		// DS18B20
-		$sensor_map['DS18B20'] = [ 'DS18B20_temperature' ];
-		// GPS (NEO 6M)
+    private function getIdents()
+    {
+        // Werte pro Sensor
+        $sensor_map = [];
+        // SDS011
+        $sensor_map['SDS011'] = ['SDS_P1', 'SDS_P2'];
+        // PMS1003, PMS3003, PMS5003, PMS6003, PMS7003
+        $sensor_map['PMS'] = ['PMS_P0', 'PMS_P1', 'PMS_P2'];
+        // DHT22
+        $sensor_map['DHT22'] = ['temperature', 'humidity'];
+        // HTU21D
+        $sensor_map['HTU21D'] = ['HTU21D_temperature', 'HTU21D_humidity'];
+        // PPD42NS
+        $sensor_map['PPD42NS'] = ['P1', 'P2']; // 'durP1', 'ratioP1', 'durP2', 'ratioP2'
+        // BMP180
+        $sensor_map['BMP180'] = ['BMP_temperature', 'BMP_pressure'];
+        // BMP280
+        $sensor_map['BMP280'] = ['BMP_temperature', 'BMP_pressure'];
+        // BME280
+        $sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
+        // DS18B20
+        $sensor_map['DS18B20'] = ['DS18B20_temperature'];
+        // GPS (NEO 6M)
 
-		$sensor_map['GPS (NEO 6M)'] = [ ]; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time' 
+        $sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
         $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
@@ -96,68 +96,68 @@ class IPSymconLuftdaten extends IPSModule
         $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
         $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
 
-		$idents = [];
-		if ($sensor_sds) {
-			$idents = array_merge($idents, $sensor_map['SDS011']);
-		}
-		if ($sensor_pms) {
-			$idents = array_merge($idents, $sensor_map['PMS']);
-		}
-		if ($sensor_dht22) {
-			$idents = array_merge($idents, $sensor_map['DHT22']);
-		}
-		if ($sensor_htu21d) {
-			$idents = array_merge($idents, $sensor_map['HTU21D']);
-		}
-		if ($sensor_ppd) {
-			$idents = array_merge($idents, $sensor_map['PPD42NS']);
-		}
-		if ($sensor_bmp180) {
-			$idents = array_merge($idents, $sensor_map['BMP180']);
-		}
-		if ($sensor_bmp280) {
-			$idents = array_merge($idents, $sensor_map['BMP280']);
-		}
-		if ($sensor_bme280) {
-			$idents = array_merge($idents, $sensor_map['BME280']);
-		}
-		if ($sensor_ds18b20) {
-			$idents = array_merge($idents, $sensor_map['DS18B20']);
-		}
-		
-		// Lokale Installation mit Wifi-Stärke
-		if ($sensor_id == '') {
-			$idents[] = 'signal';
-		}
+        $idents = [];
+        if ($sensor_sds) {
+            $idents = array_merge($idents, $sensor_map['SDS011']);
+        }
+        if ($sensor_pms) {
+            $idents = array_merge($idents, $sensor_map['PMS']);
+        }
+        if ($sensor_dht22) {
+            $idents = array_merge($idents, $sensor_map['DHT22']);
+        }
+        if ($sensor_htu21d) {
+            $idents = array_merge($idents, $sensor_map['HTU21D']);
+        }
+        if ($sensor_ppd) {
+            $idents = array_merge($idents, $sensor_map['PPD42NS']);
+        }
+        if ($sensor_bmp180) {
+            $idents = array_merge($idents, $sensor_map['BMP180']);
+        }
+        if ($sensor_bmp280) {
+            $idents = array_merge($idents, $sensor_map['BMP280']);
+        }
+        if ($sensor_bme280) {
+            $idents = array_merge($idents, $sensor_map['BME280']);
+        }
+        if ($sensor_ds18b20) {
+            $idents = array_merge($idents, $sensor_map['DS18B20']);
+        }
 
-		return $idents;
-	}
+        // Lokale Installation mit Wifi-Stärke
+        if ($sensor_id == '') {
+            $idents[] = 'signal';
+        }
 
-	private function getIdentMap()
-	{
-		// Werte-Tabelle mit Bezeichnung und Datentyp
-		$ident_map = [];
-		// Werte übernehmen
-		$ident_map['P0'] = [ 'name' => 'PM1', 'datatype' => 'pm' ];
-		$ident_map['P1'] = [ 'name' => 'PM10', 'datatype' => 'pm' ];
-		$ident_map['P2'] = [ 'name' => 'PM2.5', 'datatype' => 'pm' ];
-		$ident_map['SDS_P1'] = [ 'name' => 'PM10', 'datatype' => 'pm' ];
-		$ident_map['SDS_P2'] = [ 'name' => 'PM2.5', 'datatype' => 'pm' ];
-		$ident_map['temperature'] = [ 'name' => 'Temperature', 'datatype' => 'temperature' ];
-		$ident_map['humidity'] = [ 'name' => 'Humidity', 'datatype' => 'humidity' ];
-		$ident_map['BMP_temperature'] = [ 'name' => 'Temperature', 'datatype' => 'temperature' ];
-		$ident_map['BMP_pressure'] = [ 'name' => 'Pressure', 'datatype' => 'pressure' ];
-		$ident_map['BME280_temperature'] = [ 'name' => 'Temperature', 'datatype' => 'temperature' ];
-		$ident_map['BME280_humidity'] = [ 'name' => 'Humidity', 'datatype' => 'humidity' ];
-		$ident_map['BME280_pressure'] = [ 'name' => 'Pressure', 'datatype' => 'pressure' ];
-		$ident_map['signal'] = [ 'name' => 'Signal', 'datatype' => 'signal' ];
-		// ignorieren
-		$ident_map['samples'] = [];
-		$ident_map['min_micro'] = [];
-		$ident_map['max_micro'] = [];
+        return $idents;
+    }
 
-		return $ident_map;
-	}
+    private function getIdentMap()
+    {
+        // Werte-Tabelle mit Bezeichnung und Datentyp
+        $ident_map = [];
+        // Werte übernehmen
+        $ident_map['P0'] = ['name' => 'PM1', 'datatype' => 'pm'];
+        $ident_map['P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
+        $ident_map['P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
+        $ident_map['SDS_P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
+        $ident_map['SDS_P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
+        $ident_map['temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
+        $ident_map['humidity'] = ['name' => 'Humidity', 'datatype' => 'humidity'];
+        $ident_map['BMP_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
+        $ident_map['BMP_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
+        $ident_map['BME280_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
+        $ident_map['BME280_humidity'] = ['name' => 'Humidity', 'datatype' => 'humidity'];
+        $ident_map['BME280_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
+        $ident_map['signal'] = ['name' => 'Signal', 'datatype' => 'signal'];
+        // ignorieren
+        $ident_map['samples'] = [];
+        $ident_map['min_micro'] = [];
+        $ident_map['max_micro'] = [];
+
+        return $ident_map;
+    }
 
     public function ApplyChanges()
     {
@@ -166,70 +166,71 @@ class IPSymconLuftdaten extends IPSModule
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $update_interval = $this->ReadPropertyInteger('update_interval');
 
-		$ident_map = $this->getIdentMap();
-		$idents = $this->getIdents();
+        $ident_map = $this->getIdentMap();
+        $idents = $this->getIdents();
 
-		$vpos = 1;
-		$this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, true);
-		foreach ($ident_map as $ident => $entry) {
-			$use = in_array($ident, $idents);
-			$name = $ident_map[$ident]['name'];
-			$datatype = $ident_map[$ident]['datatype'];
-			switch ($datatype) {
-				case 'pm':
-					$this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.PM', $vpos++, $use);
-					break;
-				case 'temperature':
-					$this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Temperatur', $vpos++, $use);
-					break;
-				case 'humidity':
-					$this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Humidity', $vpos++, $use);
-					break;
-				case 'signal':
-					$this->MaintainVariable($ident, $this->Translate($name), IPS_INTEGER, 'Luftdaten.Wifi', $vpos++, $use);
-					break;
-				case 'pressure':
-					$this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Pressure', $vpos++, $use);
-					break;
-				default:
-					break;
-			}
-		}
+        $vpos = 1;
+        $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, true);
+        foreach ($ident_map as $ident => $entry) {
+            $use = in_array($ident, $idents);
+            $name = $ident_map[$ident]['name'];
+            $datatype = $ident_map[$ident]['datatype'];
+            switch ($datatype) {
+                case 'pm':
+                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.PM', $vpos++, $use);
+                    break;
+                case 'temperature':
+                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Temperatur', $vpos++, $use);
+                    break;
+                case 'humidity':
+                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Humidity', $vpos++, $use);
+                    break;
+                case 'signal':
+                    $this->MaintainVariable($ident, $this->Translate($name), IPS_INTEGER, 'Luftdaten.Wifi', $vpos++, $use);
+                    break;
+                case 'pressure':
+                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Pressure', $vpos++, $use);
+                    break;
+                default:
+                    break;
+            }
+        }
 
-		$info = $sensor_id != '' ? "Sensor $sensor_id" : "lokal";
-		$this->SetSummary($info);
+        $info = $sensor_id != '' ? "Sensor $sensor_id" : 'lokal';
+        $this->SetSummary($info);
 
-		$ok = true;
-		if ($sensor_id != '') {
-			if ($update_interval == 0) {
-				echo "update-interval must be given for fetching data from api.luftdaten.info";
-				$ok = false;
-			}
-		} else {
-			if ($update_interval != 0) {
-				echo "update-interval is not needed in local mode";
-				$ok = false;
-			}
-		}
-		$this->SetStatus($ok ? 102 : 201);
+        $ok = true;
+        if ($sensor_id != '') {
+            if ($update_interval == 0) {
+                echo 'update-interval must be given for fetching data from api.luftdaten.info';
+                $ok = false;
+            }
+        } else {
+            if ($update_interval != 0) {
+                echo 'update-interval is not needed in local mode';
+                $ok = false;
+            }
+        }
+        $this->SetStatus($ok ? 102 : 201);
 
-		$this->SetUpdateInterval();
+        $this->SetUpdateInterval();
     }
 
     public function VerifyConfiguratio()
-	{
+    {
         $sensor_id = $this->ReadPropertyString('sensor_id');
-		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
+        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
-		$jdata = do_HttpRequest($url);
-		if ($jdata == '')
-			return;
+        $jdata = do_HttpRequest($url);
+        if ($jdata == '') {
+            return;
+        }
 
-		$sensor = $jdata[0]['sensor'];
-		$sensor_type = $sensor['sensor_type']['name'];
+        $sensor = $jdata[0]['sensor'];
+        $sensor_type = $sensor['sensor_type']['name'];
 
-		echo "sensor_type=$sensor_type";
-	}
+        echo "sensor_type=$sensor_type";
+    }
 
     protected function SetUpdateInterval()
     {
@@ -238,61 +239,62 @@ class IPSymconLuftdaten extends IPSModule
         $this->SetTimerInterval('UpdateData', $msec);
     }
 
-	public function UpdateData()
-	{
+    public function UpdateData()
+    {
         $sensor_id = $this->ReadPropertyString('sensor_id');
-		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
+        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
-		$jdata = do_HttpRequest($url);
-		if ($jdata == '')
-			return;
+        $jdata = do_HttpRequest($url);
+        if ($jdata == '') {
+            return;
+        }
 
-		$timestamp = $jdata[0]['timestamp'];
-		$sensordatavaluess = $jdata[0]['sensordatavalues'];
+        $timestamp = $jdata[0]['timestamp'];
+        $sensordatavaluess = $jdata[0]['sensordatavalues'];
 
-		$this->SetStatus(102);
-	}
+        $this->SetStatus(102);
+    }
 
-	private function do_HttpRequest($url)
-	{
-		$this->SendDebug(__FUNCTION__, 'http-get: url=' . $url, 0);
-		$time_start = microtime(true);
+    private function do_HttpRequest($url)
+    {
+        $this->SendDebug(__FUNCTION__, 'http-get: url=' . $url, 0);
+        $time_start = microtime(true);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		$cdata = curl_exec($ch);
-		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $cdata = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-		$duration = floor((microtime(true) - $time_start) * 100) / 100;
-		$this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+        $duration = floor((microtime(true) - $time_start) * 100) / 100;
+        $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
-		$statuscode = 0;
-		$err = '';
-		$jdata = '';
-		if ($httpcode != 200) {
-			$err = "got http-code $httpcode from luftdaten.info";
-		} elseif ($cdata == '') {
-			$statuscode = 204;
-			$err = 'no data from luftdaten.info';
-		} else {
-			$jdata = json_decode($cdata, true);
-			if ($jdata == '') {
-				$statuscode = 204;
-				$err = 'malformed response from luftdaten.info';
-			}
-		}
-		if ($statuscode) {
-			echo " => statuscode=$statuscode, err=$err";
-			$this->SendDebug(__FUNCTION__, $err, 0);
-			$this->SetStatus($statuscode);
-		}
-		return $jdata;
-	}
+        $statuscode = 0;
+        $err = '';
+        $jdata = '';
+        if ($httpcode != 200) {
+            $err = "got http-code $httpcode from luftdaten.info";
+        } elseif ($cdata == '') {
+            $statuscode = 204;
+            $err = 'no data from luftdaten.info';
+        } else {
+            $jdata = json_decode($cdata, true);
+            if ($jdata == '') {
+                $statuscode = 204;
+                $err = 'malformed response from luftdaten.info';
+            }
+        }
+        if ($statuscode) {
+            echo " => statuscode=$statuscode, err=$err";
+            $this->SendDebug(__FUNCTION__, $err, 0);
+            $this->SetStatus($statuscode);
+        }
+        return $jdata;
+    }
 
     protected function SetValue($Ident, $Value)
     {
@@ -368,10 +370,10 @@ class IPSymconLuftdaten extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-		if ($uri == '/hook/Luftdaten/') {
-			// DOIT
-		}
-		http_response_code(404);
-		die('File not found!');
+        if ($uri == '/hook/Luftdaten/') {
+            // DOIT
+        }
+        http_response_code(404);
+        die('File not found!');
     }
 }
