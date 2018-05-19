@@ -1,13 +1,13 @@
 {
-	"id": "{60899603-A710-4B6C-A0C4-5F373251BE46}",
-	"name": "IPSymconLuftdaten",
+	"id": "{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}",
+	"name": "IPSymconLuftdatenLocal",
 	"type": 3,
 	"vendor": "Luftdaten.info",
 	"aliases": [
-		"Luftdaten"
+		"Luftdaten-Modul"
 	],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "Luftdaten"
+	"prefix": "LuftdatenLocal"
 }

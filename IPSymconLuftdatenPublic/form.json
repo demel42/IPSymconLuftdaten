@@ -1,12 +1,12 @@
 {
 	"elements":
 			[
-				{ "type": "Label", "label": "get data from api.luftdaten.info (otherwise, local installation is expected)" },
+				{ "type": "Label", "label": "get data from api.luftdaten.info" },
 				{ "type": "ValidationTextBox", "name": "sensor_id", "caption": "Sensor-ID" },
-				{ "type": "Label", "label": "Update data every X minutes" },
-				{ "type": "IntervalBox", "name": "update_interval", "caption": "Minutes" },
+				{ "type": "Label", "label": "Update data every X seconds" },
+				{ "type": "IntervalBox", "name": "update_interval", "caption": "Seconds" },
 
-				{ "type": "Label", "label": "Sensors" },
+				{ "type": "Label", "label": "Sensor" },
 				{ "type": "CheckBox", "name": "sensor_sds", "caption": " ... SDS011" },
 				{ "type": "CheckBox", "name": "sensor_pms", "caption": " ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003" },
 				{ "type": "CheckBox", "name": "sensor_dht22", "caption": " ... DHT22" },
@@ -19,8 +19,8 @@
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Verify Configuration", "onClick": "Luftdaten_VerifyConfiguration($id);" },
-				{ "type": "Button", "label": "Update Data", "onClick": "Luftdaten_UpdateData($id);" }
+				{ "type": "Button", "label": "Verify Configuration", "onClick": "LuftdatenPublic_VerifyConfiguration($id);" },
+				{ "type": "Button", "label": "Update Data", "onClick": "LuftdatenPublic_UpdateData($id);" }
 			],		
 	"status":
 			[

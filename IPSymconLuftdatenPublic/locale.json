@@ -1,10 +1,14 @@
 {
 	"translations": {
 		"de": {
+			"get data from api.luftdaten.info": "Daten von api.luftdaten.info abrufen",
+
 			"Update data every X seconds": "Aktualisiere Daten alle X Sekunden",
 			"Seconds": "Sekunden",
 
-			"Verify Configuration Data": "Prüfe Konfiguration",
+			"Sensor": "Sensor",
+
+			"Verify Configuration": "Prüfe Konfiguration",
 			"Update Data": "Aktualisiere Daten",
 
 			"last transmission": "letzte Übertragung",

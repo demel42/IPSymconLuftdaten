@@ -1,0 +1,13 @@
+{
+	"id": "{60899603-A710-4B6C-A0C4-5F373251BE46}",
+	"name": "IPSymconLuftdatenPublic",
+	"type": 3,
+	"vendor": "Luftdaten.info",
+	"aliases": [
+		"öffentliche Webseite"
+	],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "LuftdatenPublic"
+}

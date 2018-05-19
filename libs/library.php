@@ -1,67 +1,7 @@
 <?php
 
-// Constants will be defined with IP-Symcon 5.0 and newer
-if (!defined('IPS_KERNELMESSAGE')) {
-    define('IPS_KERNELMESSAGE', 10100);
-}
-if (!defined('KR_READY')) {
-    define('KR_READY', 10103);
-}
-
-if (!defined('IPS_BOOLEAN')) {
-    define('IPS_BOOLEAN', 0);
-}
-if (!defined('IPS_INTEGER')) {
-    define('IPS_INTEGER', 1);
-}
-if (!defined('IPS_FLOAT')) {
-    define('IPS_FLOAT', 2);
-}
-if (!defined('IPS_STRING')) {
-    define('IPS_STRING', 3);
-}
-
-class IPSymconLuftdaten extends IPSModule
+trait IPSymconLuftdatenLibrary
 {
-    public function Create()
-    {
-        parent::Create();
-
-        $this->RegisterPropertyString('sensor_id', '');
-        $this->RegisterPropertyInteger('update_interval', 0);
-        $this->RegisterPropertyBoolean('sensor_sds', false);
-        $this->RegisterPropertyBoolean('sensor_pms', false);
-        $this->RegisterPropertyBoolean('sensor_dht22', false);
-        $this->RegisterPropertyBoolean('sensor_htu21d', false);
-        $this->RegisterPropertyBoolean('sensor_ppd', false);
-        $this->RegisterPropertyBoolean('sensor_bmp180', false);
-        $this->RegisterPropertyBoolean('sensor_bmp280', false);
-        $this->RegisterPropertyBoolean('sensor_bme280', false);
-        $this->RegisterPropertyBoolean('sensor_ds18b20', false);
-
-        $this->CreateVarProfile('Luftdaten.PM', IPS_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
-        $this->CreateVarProfile('Luftdaten.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Luftdaten.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Luftdaten.Pressure', IPS_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Luftdaten.Wifi', IPS_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
-
-        // Inspired by module SymconTest/HookServe
-        // We need to call the RegisterHook function on Kernel READY
-        $this->RegisterMessage(0, IPS_KERNELMESSAGE);
-
-        $this->RegisterTimer('UpdateData', 0, 'Luftdaten_UpdateData(' . $this->InstanceID . ');');
-    }
-
-    // Inspired by module SymconTest/HookServe
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-    {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
-
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-            $this->RegisterHook('/hook/Luftdaten');
-        }
-    }
-
     private function getSensors()
     {
         $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
@@ -106,13 +46,11 @@ class IPSymconLuftdaten extends IPSModule
         return $sensors;
     }
 
-    private function getIdents()
+    private function getIdents(bool $isLocal)
     {
-        $sensor_id = $this->ReadPropertyString('sensor_id');
-
         // Werte pro Sensor
         $sensor_map = [];
-        if ($sensor_id == '') {
+        if ($isLocal) {
             // lokale Installation
             $sensor_map['SDS011'] = ['SDS_P1', 'SDS_P2'];
             $sensor_map['PMS'] = ['PMS_P0', 'PMS_P1', 'PMS_P2'];
@@ -178,7 +116,7 @@ class IPSymconLuftdaten extends IPSModule
         }
 
         // Lokale Installation mit Wifi-Stärke
-        if ($sensor_id == '') {
+        if ($isLocal) {
             $idents[] = 'signal';
         }
 
@@ -215,12 +153,8 @@ class IPSymconLuftdaten extends IPSModule
         return $ident_map;
     }
 
-    public function ApplyChanges()
+    private function maintainVariables($isLocal)
     {
-        parent::ApplyChanges();
-
-        $sensor_id = $this->ReadPropertyString('sensor_id');
-        $update_interval = $this->ReadPropertyInteger('update_interval');
         $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
         $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
         $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
@@ -232,7 +166,7 @@ class IPSymconLuftdaten extends IPSModule
         $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
 
         $ident_map = $this->getIdentMap();
-        $idents = $this->getIdents();
+        $idents = $this->getIdents($isLocal);
 
         $vpos = 1;
         $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, true);
@@ -264,105 +198,33 @@ class IPSymconLuftdaten extends IPSModule
                     break;
             }
         }
-
-        $info = $sensor_id != '' ? "Sensor $sensor_id" : 'lokal';
-        $this->SetSummary($info);
-
-        $ok = true;
-        if ($sensor_id != '') {
-            if ($update_interval == 0) {
-                echo 'update-interval must be given for fetching data from api.luftdaten.info';
-                $ok = false;
-            }
-        } else {
-            if ($update_interval != 0) {
-                echo 'update-interval is not needed in local mode';
-                $ok = false;
-            }
-        }
-
-        $this->SetStatus($ok ? 102 : 201);
-
-        $this->SetUpdateInterval();
     }
 
-    public function VerifyConfiguration()
+    private function createGlobals()
     {
-        $sensor_id = $this->ReadPropertyString('sensor_id');
+        $this->RegisterPropertyInteger('update_interval', 0);
+        $this->RegisterPropertyBoolean('sensor_sds', false);
+        $this->RegisterPropertyBoolean('sensor_pms', false);
+        $this->RegisterPropertyBoolean('sensor_dht22', false);
+        $this->RegisterPropertyBoolean('sensor_htu21d', false);
+        $this->RegisterPropertyBoolean('sensor_ppd', false);
+        $this->RegisterPropertyBoolean('sensor_bmp180', false);
+        $this->RegisterPropertyBoolean('sensor_bmp280', false);
+        $this->RegisterPropertyBoolean('sensor_bme280', false);
+        $this->RegisterPropertyBoolean('sensor_ds18b20', false);
 
-        $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
-        $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
-        $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
-        $sensor_htu21d = $this->ReadPropertyBoolean('sensor_htu21d');
-        $sensor_ppd = $this->ReadPropertyBoolean('sensor_ppd');
-        $sensor_bmp180 = $this->ReadPropertyBoolean('sensor_bmp180');
-        $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
-        $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
-        $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
-
-        $sensors = $this->getSensors();
-
-        if ($sensor_id == '') {
-            if ($sensors == []) {
-                echo 'local installation, no sensor configured';
-            } else {
-                echo 'local installation, compare with config-page of sensor';
-            }
-            return;
-        }
-
-        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
-
-        $jdata = $this->do_HttpRequest($url);
-        if ($jdata == '') {
-            return;
-        }
-
-        $sensor = $jdata[0]['sensor'];
-        $sensor_type = $sensor['sensor_type']['name'];
-
-        if ($sensors == []) {
-            echo "configuration incomplete: no sensor configured, got sensor=$sensor_type";
-        } elseif (!in_array($sensor_type, $sensors)) {
-            $s = $sensors == [] ? 'none' : implode(',', $sensors);
-            echo "configuration mismatch: got sensor=$sensor_type, configured are: $s";
-        } elseif (count($sensors) > 1) {
-            echo "configuration improvable: too much sensorѕ configured, got sensor=$sensor_type";
-        } else {
-            echo "configuration ok: sensor=$sensor_type";
-        }
+        $this->CreateVarProfile('Luftdaten.PM', IPS_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
+        $this->CreateVarProfile('Luftdaten.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
+        $this->CreateVarProfile('Luftdaten.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
+        $this->CreateVarProfile('Luftdaten.Pressure', IPS_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Luftdaten.Wifi', IPS_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
     }
 
-    protected function SetUpdateInterval()
-    {
-        $min = $this->ReadPropertyInteger('update_interval');
-        $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('UpdateData', $msec);
-    }
-
-    public function UpdateData()
-    {
-        $sensor_id = $this->ReadPropertyString('sensor_id');
-        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
-
-        $jdata = $this->do_HttpRequest($url);
-        if ($jdata == '') {
-            return;
-        }
-
-        $timestamp = $jdata[0]['timestamp'];
-        $this->SetValue('LastTransmission', strtotime($timestamp));
-
-        $sensordatavalues = $jdata[0]['sensordatavalues'];
-        $this->DecodeData($sensordatavalues);
-        $this->SetStatus(102);
-    }
-
-    protected function DecodeData($sensordatavalues)
+    private function decodeData($sensordatavalues, $isLocal)
     {
         $this->SendDebug(__FUNCTION__, 'sensordatavalues=' . print_r($sensordatavalues, true), 0);
 
-        $idents = $this->getIdents();
+        $idents = $this->getIdents($isLocal);
         $this->SendDebug(__FUNCTION__, 'idents=' . implode(',', $idents), 0);
 
         $ident_map = $this->getIdentMap();
@@ -403,58 +265,9 @@ class IPSymconLuftdaten extends IPSModule
                 default:
                     break;
             }
+			$this->SendDebug(__FUNCTION__, ' ... ' . $ident . '=' . $value, 0);
             $this->SetValue($ident, $value);
         }
-    }
-
-    private function do_HttpRequest($url)
-    {
-        $this->SendDebug(__FUNCTION__, 'http-get: url=' . $url, 0);
-        $time_start = microtime(true);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $cdata = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        $duration = floor((microtime(true) - $time_start) * 100) / 100;
-        $this->SendDebug(__FUNCTION__, ' => httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
-
-        $statuscode = 0;
-        $err = '';
-        $jdata = '';
-        if ($httpcode != 200) {
-            if ($httpcode == 404) {
-                $err = "got http-code $httpcode (page not found) from luftdaten.info";
-                $statuscode = 204;
-            } elseif ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = 202;
-                $err = "got http-code $httpcode (server error) from luftdaten.info";
-            } else {
-                $err = "got http-code $httpcode from luftdaten.info";
-                $statuscode = 203;
-            }
-        } elseif ($cdata == '') {
-            $statuscode = 205;
-            $err = 'no data from luftdaten.info';
-        } else {
-            $jdata = json_decode($cdata, true);
-            if ($jdata == '') {
-                $statuscode = 205;
-                $err = 'malformed response from luftdaten.info';
-            }
-        }
-        if ($statuscode) {
-            echo "url=$url => statuscode=$statuscode, err=$err";
-            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
-            $this->SetStatus($statuscode);
-        }
-        return $jdata;
     }
 
     protected function SetValue($Ident, $Value)
@@ -496,62 +309,5 @@ class IPSymconLuftdaten extends IPSModule
         }
     }
 
-    // Inspired from module SymconTest/HookServe
-    private function RegisterHook($WebHook)
-    {
-        $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-        if (count($ids) > 0) {
-            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
-            $found = false;
-            foreach ($hooks as $index => $hook) {
-                if ($hook['Hook'] == $WebHook) {
-                    if ($hook['TargetID'] == $this->InstanceID) {
-                        return;
-                    }
-                    $hooks[$index]['TargetID'] = $this->InstanceID;
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $hooks[] = ['Hook' => $WebHook, 'TargetID' => $this->InstanceID];
-            }
-            IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
-            IPS_ApplyChanges($ids[0]);
-        }
-    }
-
-    private function UnregisterHook($WebHook)
-    {
-        $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-        if (count($ids) > 0) {
-            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
-            $found = false;
-            $new_hooks = [];
-            foreach ($hooks as $index => $hook) {
-                if ($hook['Hook'] != $WebHook) {
-                    $new_hooks[] = $hook['Hook'];
-                }
-            }
-            IPS_SetProperty($ids[0], 'Hooks', json_encode($new_hooks));
-            IPS_ApplyChanges($ids[0]);
-        }
-    }
-
-    // Inspired from module SymconTest/HookServe
-    protected function ProcessHookData()
-    {
-        $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
-
-        $root = realpath(__DIR__);
-        $uri = $_SERVER['REQUEST_URI'];
-        if (substr($uri, -1) == '/') {
-            http_response_code(404);
-            die('File not found!');
-        }
-        if ($uri == '/hook/Luftdaten/') {
-            // DOIT
-        }
-        http_response_code(404);
-        die('File not found!');
-    }
 }
+
