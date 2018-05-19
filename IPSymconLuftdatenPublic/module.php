@@ -23,9 +23,9 @@ if (!defined('IPS_STRING')) {
     define('IPS_STRING', 3);
 }
 
-class IPSymconLuftdatenPublic extends IPSModule
+class LuftdatenPublic extends IPSModule
 {
-    use IPSymconLuftdatenLibrary;
+    use LuftdatenLibrary;
 
     public function Create()
     {

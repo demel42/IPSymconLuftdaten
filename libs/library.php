@@ -1,6 +1,6 @@
 <?php
 
-trait IPSymconLuftdatenLibrary
+trait LuftdatenLibrary
 {
     private function getSensors()
     {
