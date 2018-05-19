@@ -46,10 +46,10 @@ class IPSymconLuftdatenPublic extends IPSModule
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $info = "Sensor $sensor_id";
-		$sensors = $this->getSensors();
-		if ($sensors != []) {
-			$info .= ' (' . implode(',', $sensors) . ')';
-		}
+        $sensors = $this->getSensors();
+        if ($sensors != []) {
+            $info .= ' (' . implode(',', $sensors) . ')';
+        }
         $this->SetSummary($info);
 
         $ok = true;
