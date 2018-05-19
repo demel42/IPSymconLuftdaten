@@ -219,7 +219,7 @@ class IPSymconLuftdaten extends IPSModule
     public function VerifyConfiguratio()
 	{
         $sensor_id = $this->ReadPropertyString('sensor_id');
-		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . ˝/';
+		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
 		$jdata = do_HttpRequest($url);
 		if ($jdata == '')
@@ -241,7 +241,7 @@ class IPSymconLuftdaten extends IPSModule
 	public function UpdateData()
 	{
         $sensor_id = $this->ReadPropertyString('sensor_id');
-		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . ˝/';
+		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
 		$jdata = do_HttpRequest($url);
 		if ($jdata == '')
