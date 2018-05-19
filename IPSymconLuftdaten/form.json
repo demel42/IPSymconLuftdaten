@@ -1,0 +1,33 @@
+{
+	"elements":
+			[
+				{ "type": "Label", "label": "get data from api.luftdaten.info" },
+				{ "type": "ValidationTextBox", "name": "sensor_id", "Sensor-ID" },
+				{ "type": "Label", "label": "Update data every X minutes" },
+				{ "type": "IntervalBox", "name": "update_interval", "caption": "Minutes" }
+				{ "type": "Label", "label": "if empty, local installation is expected" },
+
+				{ "type": "Label", "label": "Sensors" },
+				{ "type": "CheckBox, "name": "sensor_sds", "caption": " ... SDS011" },
+				{ "type": "CheckBox, "name": "sensor_pms", "caption": " ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003" },
+				{ "type": "CheckBox, "name": "sensor_dht22", "caption": " ... DHT22" },
+				{ "type": "CheckBox, "name": "sensor_htu21d", "caption": " ... HTU21D" },
+				{ "type": "CheckBox, "name": "sensor_ppd", "caption": " ... PPD42NS" },
+				{ "type": "CheckBox, "name": "sensor_bmp180", "caption": " ... BMP180" },
+				{ "type": "CheckBox, "name": "sensor_bmp280", "caption": " ... BMP280" },
+				{ "type": "CheckBox, "name": "sensor_bme280", "caption": " ... BME280" },
+				{ "type": "CheckBox, "name": "sensor_ds18b20", "caption": " ... DS18B20" },
+			],
+	"actions":
+			[
+				{ "type": "Button", "label": "Update Data", "onClick": "Luftdaten_UpdateData($id);" }
+			],		
+	"status":
+			[
+				{ "code": 101, "icon": "inactive", "caption": "Instance getting created" },
+				{ "code": 102, "icon": "active", "caption": "Instance is active" },
+				{ "code": 104, "icon": "inactive", "caption": "Instance is inactive" },
+
+				{ "code": 201, "icon": "error", "caption": "Instance is inactive (invalid configuration)" }
+			]
+}

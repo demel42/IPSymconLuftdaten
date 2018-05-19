@@ -1,0 +1,16 @@
+{
+	"translations": {
+		"de": {
+			"Update data every X seconds": "Aktualisiere Daten alle X Sekunden",
+			"Seconds": "Sekunden",
+
+			"Update Data": "Aktualisiere Daten",
+
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is inactive": "Instanz ist inaktiv",
+
+			"Instance is inactive (invalid configuration)": "Instanz ist inaktiv (ungültige Konfiguration)"
+		}
+	}
+}
