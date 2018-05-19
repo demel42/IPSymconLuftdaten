@@ -20,7 +20,7 @@
 			],
 	"actions":
 			[
-				{ "type": "Button", "label": "Update Data", "onClick": "Luftdaten_UpdateData($id);" }
+				{ "type": "Button", "label": "Verify Configuration", "onClick": "Luftdaten_VerifyConfiguration($id);" }
 			],		
 	"status":
 			[

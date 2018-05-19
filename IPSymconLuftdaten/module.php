@@ -216,6 +216,21 @@ class IPSymconLuftdaten extends IPSModule
 		$this->SetUpdateInterval();
     }
 
+    pubilc function VerifyConfiguratio()
+	{
+        $sensor_id = $this->ReadPropertyString('sensor_id');
+		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . ˝/';
+
+		$jdata = do_HttpRequest($url);
+		if ($jdata == '')
+			return;
+
+		$sensor = $jdata[0]['sensor'];
+		$sensor_type = $sensor['sensor_type']['name'];
+
+		echo "sensor_type=$sensor_type";
+	}
+
     protected function SetUpdateInterval()
     {
         $min = $this->ReadPropertyInteger('update_interval');
@@ -228,7 +243,19 @@ class IPSymconLuftdaten extends IPSModule
         $sensor_id = $this->ReadPropertyString('sensor_id');
 		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . ˝/';
 
-		$this->SendDebug(__FUNCTION__, 'http-get . ': url=' . $url, 0);
+		$jdata = do_HttpRequest($url);
+		if ($jdata == '')
+			return;
+
+		$timestamp = $jdata[0]['timestamp'];
+		$sensordatavaluess = $jdata[0]['sensordatavalues'];
+
+		$this->SetStatus(102);
+	}
+
+	private function do_HttpRequest($url)
+	{
+		$this->SendDebug(__FUNCTION__, 'http-get: url=' . $url, 0);
 		$time_start = microtime(true);
 
 		$ch = curl_init();
@@ -263,12 +290,8 @@ class IPSymconLuftdaten extends IPSModule
 			echo " => statuscode=$statuscode, err=$err";
 			$this->SendDebug(__FUNCTION__, $err, 0);
 			$this->SetStatus($statuscode);
-			return;
 		}
-		$timestamp = $jdata[0]['timestamp'];
-		$sensordatavaluess = $jdata[0]['sensordatavalues'];
-
-		$this->SetStatus(102);
+		return $jdata;
 	}
 
     protected function SetValue($Ident, $Value)
