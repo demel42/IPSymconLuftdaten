@@ -25,13 +25,13 @@ if (!defined('IPS_STRING')) {
 
 class IPSymconLuftdatenLocal extends IPSModule
 {
-	use IPSymconLuftdatenLibrary;
+    use IPSymconLuftdatenLibrary;
 
     public function Create()
     {
         parent::Create();
 
-		$this->createGlobals();
+        $this->createGlobals();
 
         // Inspired by module SymconTest/HookServe
         // We need to call the RegisterHook function on Kernel READY
@@ -52,24 +52,24 @@ class IPSymconLuftdatenLocal extends IPSModule
     {
         parent::ApplyChanges();
 
-		$this->maintainVariables(true);
+        $this->maintainVariables(true);
 
         $this->SetSummary('lokal');
 
-		$statuscode = 102;
+        $statuscode = 102;
 
         $sensors = $this->getSensors();
-		if ($sensors == []) {
-			$statuscode = 201;
-		}
+        if ($sensors == []) {
+            $statuscode = 201;
+        }
 
-		$this->SetStatus($statuscode);
+        $this->SetStatus($statuscode);
 
-		// Inspired by module SymconTest/HookServe
-		// Only call this in READY state. On startup the WebHook instance might not be available yet
-		if (IPS_GetKernelRunlevel() == KR_READY) {
-			$this->RegisterHook('/hook/Luftdaten');
-		}
+        // Inspired by module SymconTest/HookServe
+        // Only call this in READY state. On startup the WebHook instance might not be available yet
+        if (IPS_GetKernelRunlevel() == KR_READY) {
+            $this->RegisterHook('/hook/Luftdaten');
+        }
     }
 
     // Inspired from module SymconTest/HookServe
@@ -107,16 +107,16 @@ class IPSymconLuftdatenLocal extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-		if ($uri == '/hook/Luftdaten') {
+        if ($uri == '/hook/Luftdaten') {
             $data = file_get_contents('php://input');
-			$jdata = json_decode($data, true);
-			if ($jdata == '') {
-				echo 'malformed data: ' . $data;
-				$this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
-			}
-			$this->SetValue('LastTransmission', time());
-			$sensordatavalues = $jdata['sensordatavalues'];
-			$this->decodeData($sensordatavalues, true);
+            $jdata = json_decode($data, true);
+            if ($jdata == '') {
+                echo 'malformed data: ' . $data;
+                $this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
+            }
+            $this->SetValue('LastTransmission', time());
+            $sensordatavalues = $jdata['sensordatavalues'];
+            $this->decodeData($sensordatavalues, true);
         }
         http_response_code(404);
         die('File not found!');

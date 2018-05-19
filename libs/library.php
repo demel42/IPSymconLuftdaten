@@ -265,7 +265,7 @@ trait IPSymconLuftdatenLibrary
                 default:
                     break;
             }
-			$this->SendDebug(__FUNCTION__, ' ... ' . $ident . '=' . $value, 0);
+            $this->SendDebug(__FUNCTION__, ' ... ' . $ident . '=' . $value, 0);
             $this->SetValue($ident, $value);
         }
     }
@@ -308,6 +308,4 @@ trait IPSymconLuftdatenLibrary
             }
         }
     }
-
 }
-

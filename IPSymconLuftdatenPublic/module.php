@@ -25,7 +25,7 @@ if (!defined('IPS_STRING')) {
 
 class IPSymconLuftdatenPublic extends IPSModule
 {
-	use IPSymconLuftdatenLibrary;
+    use IPSymconLuftdatenLibrary;
 
     public function Create()
     {
@@ -33,7 +33,7 @@ class IPSymconLuftdatenPublic extends IPSModule
 
         $this->RegisterPropertyString('sensor_id', '');
 
-		$this->createGlobals();
+        $this->createGlobals();
 
         $this->RegisterTimer('UpdateData', 0, 'LuftdatenPublic_UpdateData(' . $this->InstanceID . ');');
     }
@@ -42,18 +42,18 @@ class IPSymconLuftdatenPublic extends IPSModule
     {
         parent::ApplyChanges();
 
-		$this->maintainVariables(false);
+        $this->maintainVariables(false);
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $info = "Sensor $sensor_id";
         $this->SetSummary($info);
 
-		$ok = true;
+        $ok = true;
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         if ($sensor_id == '') {
-			echo 'missing sensor-id';
-			$ok = false;
+            echo 'missing sensor-id';
+            $ok = false;
         }
 
         $this->SetStatus($ok ? 102 : 201);
@@ -105,18 +105,18 @@ class IPSymconLuftdatenPublic extends IPSModule
             return;
         }
 
-		$max_ts = 0;
-		$idx = 0;
-		for ($i = 0; $i < count($jdata); $i++) {
-			$ts = strtotime($jdata[$i]['timestamp']);
-			if ($ts > $max_ts) {
-				$max_ts = $ts;
-				$idx = $i;
-			}
-		}
+        $max_ts = 0;
+        $idx = 0;
+        for ($i = 0; $i < count($jdata); $i++) {
+            $ts = strtotime($jdata[$i]['timestamp']);
+            if ($ts > $max_ts) {
+                $max_ts = $ts;
+                $idx = $i;
+            }
+        }
 
-		$ts = strtotime($jdata[$idx]['timestamp'] . ' GMT');
-		$this->SetValue('LastTransmission', $ts);
+        $ts = strtotime($jdata[$idx]['timestamp'] . ' GMT');
+        $this->SetValue('LastTransmission', $ts);
 
         $sensordatavalues = $jdata[$idx]['sensordatavalues'];
         $this->decodeData($sensordatavalues, false);
@@ -172,5 +172,4 @@ class IPSymconLuftdatenPublic extends IPSModule
         }
         return $jdata;
     }
-
 }
