@@ -138,13 +138,13 @@ trait IPSymconLuftdatenLibrary
 
         $ident_map['SDS_P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
         $ident_map['SDS_P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
-        $ident_map['BMP_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
-        $ident_map['BMP_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
-        $ident_map['BME280_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
-        $ident_map['BME280_humidity'] = ['name' => 'Humidity', 'datatype' => 'humidity'];
-        $ident_map['BME280_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
+        $ident_map['BMP_temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
+        $ident_map['BMP_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
+        $ident_map['BME280_temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
+        $ident_map['BME280_humidity'] = ['name' => 'humidity', 'datatype' => 'humidity'];
+        $ident_map['BME280_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
 
-        $ident_map['signal'] = ['name' => 'Signal', 'datatype' => 'signal'];
+        $ident_map['signal'] = ['name' => 'wifi-signal', 'datatype' => 'signal'];
         // ignorieren
         $ident_map['samples'] = [];
         $ident_map['min_micro'] = [];

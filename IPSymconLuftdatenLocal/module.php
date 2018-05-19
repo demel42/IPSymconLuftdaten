@@ -54,7 +54,13 @@ class IPSymconLuftdatenLocal extends IPSModule
 
         $this->maintainVariables(true);
 
-        $this->SetSummary('lokal');
+		$info = 'lokal';
+		$sensors = $this->getSensors();
+		if ($sensors != []) {
+			$info .= ' (' . implode(',', $sensors) . ')';
+		}
+
+        $this->SetSummary($info);
 
         $statuscode = 102;
 
