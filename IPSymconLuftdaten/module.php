@@ -48,6 +48,8 @@ class IPSymconLuftdaten extends IPSModule
         // Inspired by module SymconTest/HookServe
         // We need to call the RegisterHook function on Kernel READY
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
+
+		$this->RegisterTimer('UpdateData', 0, 'Luftdaten_UpdateData(' . $this->InstanceID . ');');
     }
 
     // Inspired by module SymconTest/HookServe
@@ -60,32 +62,82 @@ class IPSymconLuftdaten extends IPSModule
         }
     }
 
+    private function getSensors()
+    {
+        $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
+        $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
+        $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
+        $sensor_htu21d = $this->ReadPropertyBoolean('sensor_htu21d');
+        $sensor_ppd = $this->ReadPropertyBoolean('sensor_ppd');
+        $sensor_bmp180 = $this->ReadPropertyBoolean('sensor_bmp180');
+        $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
+        $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
+        $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
+
+        $sensors = [];
+        if ($sensor_sds) {
+            $sensors[] = 'SDS011';
+        }
+        if ($sensor_pms) {
+            $sensors[] = 'PMS';
+        }
+        if ($sensor_dht22) {
+            $sensors[] = 'DHT22';
+        }
+        if ($sensor_htu21d) {
+            $sensors[] = 'HTU21D';
+        }
+        if ($sensor_ppd) {
+            $sensors[] = 'PPD42NS';
+        }
+        if ($sensor_bmp180) {
+            $sensors[] = 'BMP180';
+        }
+        if ($sensor_bmp280) {
+            $sensors[] = 'BMP280';
+        }
+        if ($sensor_bme280) {
+            $sensors[] = 'BME280';
+        }
+        if ($sensor_ds18b20) {
+            $sensors[] = 'DS18B20';
+        }
+
+		return $sensors;
+	}
+
     private function getIdents()
     {
+        $sensor_id = $this->ReadPropertyString('sensor_id');
+
         // Werte pro Sensor
         $sensor_map = [];
-        // SDS011
-        $sensor_map['SDS011'] = ['SDS_P1', 'SDS_P2'];
-        // PMS1003, PMS3003, PMS5003, PMS6003, PMS7003
-        $sensor_map['PMS'] = ['PMS_P0', 'PMS_P1', 'PMS_P2'];
-        // DHT22
-        $sensor_map['DHT22'] = ['temperature', 'humidity'];
-        // HTU21D
-        $sensor_map['HTU21D'] = ['HTU21D_temperature', 'HTU21D_humidity'];
-        // PPD42NS
-        $sensor_map['PPD42NS'] = ['P1', 'P2']; // 'durP1', 'ratioP1', 'durP2', 'ratioP2'
-        // BMP180
-        $sensor_map['BMP180'] = ['BMP_temperature', 'BMP_pressure'];
-        // BMP280
-        $sensor_map['BMP280'] = ['BMP_temperature', 'BMP_pressure'];
-        // BME280
-        $sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
-        // DS18B20
-        $sensor_map['DS18B20'] = ['DS18B20_temperature'];
-        // GPS (NEO 6M)
+		if ($sensor_id == '') {
+			// lokale Installation
+			$sensor_map['SDS011'] = ['SDS_P1', 'SDS_P2'];
+			$sensor_map['PMS'] = ['PMS_P0', 'PMS_P1', 'PMS_P2'];
+			$sensor_map['DHT22'] = ['temperature', 'humidity'];
+			$sensor_map['HTU21D'] = ['HTU21D_temperature', 'HTU21D_humidity'];
+			$sensor_map['PPD42NS'] = ['P1', 'P2']; // 'durP1', 'ratioP1', 'durP2', 'ratioP2'
+			$sensor_map['BMP180'] = ['BMP_temperature', 'BMP_pressure'];
+			$sensor_map['BMP280'] = ['BMP_temperature', 'BMP_pressure'];
+			$sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
+			$sensor_map['DS18B20'] = ['DS18B20_temperature'];
+			$sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
+		} else {
+			// Daten von api.luftdate.info
+			$sensor_map['SDS011'] = ['P1', 'P2'];
+			$sensor_map['PMS'] = ['P0', 'P1', 'P2'];
+			$sensor_map['DHT22'] = ['temperature', 'humidity'];
+			$sensor_map['HTU21D'] = ['temperature', 'humidity'];
+			$sensor_map['PPD42NS'] = ['P1', 'P2'];
+			$sensor_map['BMP180'] = ['temperature', 'pressure', 'pressure_at_sealevel'];
+			$sensor_map['BMP280'] = ['temperature', 'pressure', 'pressure_at_sealevel'];
+			$sensor_map['BME280'] = ['temperature', 'pressure', 'pressure_at_sealevel', 'humidity'];
+			$sensor_map['DS18B20'] = ['temperature'];
+			$sensor_map['GPS (NEO 6M)'] = [];
+		}
 
-        $sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
-        $sensor_id = $this->ReadPropertyString('sensor_id');
         $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
         $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
         $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
@@ -141,15 +193,19 @@ class IPSymconLuftdaten extends IPSModule
         $ident_map['P0'] = ['name' => 'PM1', 'datatype' => 'pm'];
         $ident_map['P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
         $ident_map['P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
+        $ident_map['temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
+        $ident_map['humidity'] = ['name' => 'humidity', 'datatype' => 'humidity'];
+        $ident_map['pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
+        $ident_map['pressure_at_sealevel'] = ['name' => 'absolute pressure', 'datatype' => 'pressure'];
+
         $ident_map['SDS_P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
         $ident_map['SDS_P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
-        $ident_map['temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
-        $ident_map['humidity'] = ['name' => 'Humidity', 'datatype' => 'humidity'];
         $ident_map['BMP_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
         $ident_map['BMP_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
         $ident_map['BME280_temperature'] = ['name' => 'Temperature', 'datatype' => 'temperature'];
         $ident_map['BME280_humidity'] = ['name' => 'Humidity', 'datatype' => 'humidity'];
         $ident_map['BME280_pressure'] = ['name' => 'Pressure', 'datatype' => 'pressure'];
+
         $ident_map['signal'] = ['name' => 'Signal', 'datatype' => 'signal'];
         // ignorieren
         $ident_map['samples'] = [];
@@ -165,6 +221,15 @@ class IPSymconLuftdaten extends IPSModule
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $update_interval = $this->ReadPropertyInteger('update_interval');
+        $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
+        $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
+        $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
+        $sensor_htu21d = $this->ReadPropertyBoolean('sensor_htu21d');
+        $sensor_ppd = $this->ReadPropertyBoolean('sensor_ppd');
+        $sensor_bmp180 = $this->ReadPropertyBoolean('sensor_bmp180');
+        $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
+        $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
+        $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
 
         $ident_map = $this->getIdentMap();
         $idents = $this->getIdents();
@@ -172,9 +237,11 @@ class IPSymconLuftdaten extends IPSModule
         $vpos = 1;
         $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, true);
         foreach ($ident_map as $ident => $entry) {
+			$this->SendDebug(__FUNCTION__, 'ident=' . $ident . ', entry=' . print_r($entry, true), 0);
             $use = in_array($ident, $idents);
-            $name = $ident_map[$ident]['name'];
-            $datatype = $ident_map[$ident]['datatype'];
+			if ($entry == []) continue;
+            $name = $entry['name'];
+            $datatype = $entry['datatype'];
             switch ($datatype) {
                 case 'pm':
                     $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.PM', $vpos++, $use);
@@ -211,17 +278,40 @@ class IPSymconLuftdaten extends IPSModule
                 $ok = false;
             }
         }
+
         $this->SetStatus($ok ? 102 : 201);
 
         $this->SetUpdateInterval();
     }
 
-    public function VerifyConfiguratio()
+    public function VerifyConfiguration()
     {
         $sensor_id = $this->ReadPropertyString('sensor_id');
+
+        $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
+        $sensor_pms = $this->ReadPropertyBoolean('sensor_pms');
+        $sensor_dht22 = $this->ReadPropertyBoolean('sensor_dht22');
+        $sensor_htu21d = $this->ReadPropertyBoolean('sensor_htu21d');
+        $sensor_ppd = $this->ReadPropertyBoolean('sensor_ppd');
+        $sensor_bmp180 = $this->ReadPropertyBoolean('sensor_bmp180');
+        $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
+        $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
+        $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
+
+		$sensors = $this->getSensors();
+
+		if ($sensor_id == '') {
+			if ($sensors == []) {
+				echo 'local installation, no sensor configured';
+			} else {
+				echo "local installation, compare with config-page of sensor";
+			}
+			return;
+		}
+
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
-        $jdata = do_HttpRequest($url);
+        $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {
             return;
         }
@@ -229,7 +319,16 @@ class IPSymconLuftdaten extends IPSModule
         $sensor = $jdata[0]['sensor'];
         $sensor_type = $sensor['sensor_type']['name'];
 
-        echo "sensor_type=$sensor_type";
+		if ($sensors == []) {
+			echo "configuration incomplete: no sensor configured, got sensor=$sensor_type";
+		} elseif (!in_array($sensor_type, $sensors)) {
+			$s = $sensors == [] ? "none" : implode(',', $sensors);
+			echo "configuration mismatch: got sensor=$sensor_type, configured are: $s";
+		} elseif (count($sensors) > 1) {
+			echo "configuration improvable: too much sensorѕ configured, got sensor=$sensor_type";
+		} else {
+			echo "configuration ok: sensor=$sensor_type";
+		}
     }
 
     protected function SetUpdateInterval()
@@ -244,16 +343,65 @@ class IPSymconLuftdaten extends IPSModule
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
-        $jdata = do_HttpRequest($url);
+        $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {
             return;
         }
 
         $timestamp = $jdata[0]['timestamp'];
-        $sensordatavaluess = $jdata[0]['sensordatavalues'];
+		$this->SetValue('LastTransmission', strtotime($timestamp));
 
+        $sensordatavalues = $jdata[0]['sensordatavalues'];
+		$this->DecodeData($sensordatavalues);
         $this->SetStatus(102);
     }
+
+    protected function DecodeData($sensordatavalues)
+    {
+		$this->SendDebug(__FUNCTION__, 'sensordatavalues=' . print_r($sensordatavalues, true), 0);
+
+        $idents = $this->getIdents();
+		$this->SendDebug(__FUNCTION__, 'idents=' . implode(',', $idents), 0);
+
+        $ident_map = $this->getIdentMap();
+
+		foreach ($sensordatavalues as $sensordatavalue) {
+			$ident = $sensordatavalue['value_type'];
+			$value = $sensordatavalue['value'];
+			if (!isset($ident_map[$ident])) {
+				echo "no mapping for ident $ident\n";
+				continue;
+			}
+			if (!isset($ident_map[$ident]['datatype']))
+				continue;
+			if (!in_array($ident, $idents))
+				continue;
+			switch ($ident_map[$ident]['datatype']) {
+				case 'pm':
+				case 'temperature':
+				case 'humidity':
+					if (!floatval($value)) {
+						$value = 0;
+					}
+					break;
+				case 'signal':
+					if (!intval($value)) {
+						$value = 0;
+					}
+					break;
+				case 'pressure':
+					if (floatval($value) && $value > 0) {
+						$value = $value / 100;
+					} else {
+						$value = 0;
+					}
+					break;
+				default:
+					break;
+			}
+			$this->SetValue($ident, $value);
+		}
+	}
 
     private function do_HttpRequest($url)
     {
@@ -277,20 +425,29 @@ class IPSymconLuftdaten extends IPSModule
         $err = '';
         $jdata = '';
         if ($httpcode != 200) {
-            $err = "got http-code $httpcode from luftdaten.info";
+			if ($httpcode == 404) {
+				$err = "got http-code $httpcode (page not found) from luftdaten.info";
+				$statuscode = 204;
+			} elseif ($httpcode >= 500 && $httpcode <= 599) {
+				$statuscode = 202;
+				$err = "got http-code $httpcode (server error) from luftdaten.info";
+			} else {
+				$err = "got http-code $httpcode from luftdaten.info";
+				$statuscode = 203;
+			}
         } elseif ($cdata == '') {
-            $statuscode = 204;
+            $statuscode = 205;
             $err = 'no data from luftdaten.info';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
-                $statuscode = 204;
+                $statuscode = 205;
                 $err = 'malformed response from luftdaten.info';
             }
         }
         if ($statuscode) {
-            echo " => statuscode=$statuscode, err=$err";
-            $this->SendDebug(__FUNCTION__, $err, 0);
+            echo "url=$url => statuscode=$statuscode, err=$err";
+            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->SetStatus($statuscode);
         }
         return $jdata;
@@ -355,6 +512,23 @@ class IPSymconLuftdaten extends IPSModule
                 $hooks[] = ['Hook' => $WebHook, 'TargetID' => $this->InstanceID];
             }
             IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
+            IPS_ApplyChanges($ids[0]);
+        }
+    }
+
+    private function UnregisterHook($WebHook)
+    {
+        $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
+        if (count($ids) > 0) {
+            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
+            $found = false;
+			$new_hooks = [];
+            foreach ($hooks as $index => $hook) {
+                if ($hook['Hook'] != $WebHook) {
+					$new_hooks[] = $hook['Hook'];
+				}
+            }
+            IPS_SetProperty($ids[0], 'Hooks', json_encode($new_hooks));
             IPS_ApplyChanges($ids[0]);
         }
     }
