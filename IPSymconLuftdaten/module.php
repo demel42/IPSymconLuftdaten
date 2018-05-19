@@ -216,7 +216,7 @@ class IPSymconLuftdaten extends IPSModule
 		$this->SetUpdateInterval();
     }
 
-    pubilc function VerifyConfiguratio()
+    public function VerifyConfiguratio()
 	{
         $sensor_id = $this->ReadPropertyString('sensor_id');
 		$url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . ˝/';
