@@ -60,7 +60,7 @@ class IPSymconLuftdaten extends IPSModule
         }
     }
 
-	private functione getIdents()
+	private function getIdents()
 	{
 		// Werte pro Sensor
 		$sensor_map = [];
@@ -133,7 +133,7 @@ class IPSymconLuftdaten extends IPSModule
 		return $idents;
 	}
 
-	private functione getIdentMap()
+	private function getIdentMap()
 	{
 		// Werte-Tabelle mit Bezeichnung und Datentyp
 		$ident_map = [];
