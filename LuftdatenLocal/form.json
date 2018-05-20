@@ -1,9 +1,9 @@
 {
 	"elements":
 			[
-				{ "type": "Label", "label": "receive data from local sensor-module" },
+				{ "type": "Label", "label": "receive data from local sensor-station" },
 
-				{ "type": "Label", "label": "installed sensors (see config-page of sensor-module)" },
+				{ "type": "Label", "label": "installed sensors (see config-page of sensor-station)" },
 				{ "type": "CheckBox", "name": "sensor_sds", "caption": " ... SDS011" },
 				{ "type": "CheckBox", "name": "sensor_pms", "caption": " ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003" },
 				{ "type": "CheckBox", "name": "sensor_dht22", "caption": " ... DHT22" },
