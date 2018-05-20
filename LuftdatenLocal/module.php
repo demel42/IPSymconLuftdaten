@@ -123,7 +123,7 @@ class LuftdatenLocal extends IPSModule
                 $this->SetValue('LastTransmission', time());
                 $sensordatavalues = $jdata['sensordatavalues'];
                 $this->decodeData($sensordatavalues, true);
-			}
+            }
         }
         http_response_code(404);
         die('File not found!');
