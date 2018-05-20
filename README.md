@@ -15,10 +15,18 @@ Modul für IP-Symcon ab Version 4.
 
 ## 1. Funktionsumfang
 
+Das Projekt _Luftdaten.info_ ist ein Bürgerprojekt, um flächendeckend die Belastung mit Feinstaub zu messen. Um das erreichen zu können, wurden eine einfache Station entwickelt, die man ohne spezielle Kenntnisse bauen und in Betrieb nehmen kann. Neben dem zentrale Sensor für Feinstaub (PM2.5 und PM10) gibt weiter optionale Sensoren für Temperatur, Luftfeuchtigkeit und Luftdruck.
+
+Diese Daten werden vom Sensor zyklisch an api.luftdaten.info und Madavi.de übergeben und stehen dort zum Abruf bereit.
+Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden mittels 
+ - pull per http-get: das funktioniert nicht besonders gut, da das Modul nur während der Messungen aufwacht und zu anderen Zeit nicht erreichbar ist.
+ - push per http-post: die Station kann die Daten nicht nur an die o.g. API übergeben sondern auch zusätzlich an eine lokale API.<br>
+   Diese Variante ist hier per WebHook realisiert.
+
 ## 2. Voraussetzungen
 
  - IPS 4.x
- - Luftdaten.info
+ - eine eigene Sensor-Station gemäß Anleitung von https://luftdaten.info oder ein ausgewähler Sensor von http://deutschland.maps.luftdaten.info.
 
 ## 3. Installation
 
@@ -38,30 +46,63 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung in IPS
 
-In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _(sonstiges)_ und als Gerät _Luftdaten_ auswählen.
+In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Luftdaten.info_ auswählen.
+Es werden zwei Module angeboten:
+ - lokale Sensor-Station - das ist für eine lokal installiertes Sensor-Station
+ - öffentliche Webseite - das ist zu verwenden für jeweils einen Sensor von http://deutschland.maps.luftdaten.info.
+je nach Wunsch das entsprechende Gerät auswählen.
 
-In dem Konfigurationsdialog den ....
+#### Konfiguration für ein eigenen Luftdaten-Sensor
+
+In dem Konfigurationsdialog müssen die Sensoren des Moduls angegeben werden, von denen die Daten übernommen werden sollen. Dien Angabe entspricht der Konfigurationswebseite des Sensor-Moduls.
+
+Es wird hierfür ein WebHoom _hook/Luftdaten_ eingerichtet.
+
+Auf der Konfigurationsseite des Sensor-Moduls muss die Datenübertragung noch parametriert werden
+
+| Eigenschaft               | Beschreibung |
+| :-----------------------: | :----------------------------------------------------------------------------------------------------------: |
+| An eigene API senden      | aktivieren |
+| Server	                | IP-Adresse des IPS-Servers |
+| Pfad	                    | _/hook/Luftdaten_ |
+| Port	                    | _3777_ |
+
+Es wird nur eine lokale Sensor-Station unterstützt.
+
+#### Konfiguration für Sensoren von http://deutschland.maps.luftdaten.info
+
+In dem Konfigurationsdialog muss die ID des Sensors eingegeben werden sowie der Type Sensor. Hinweis: in den öffentlichen Daten wird für jeden Sensor eine eigenen ID vergeben, also eine typische Messstation (Feinstaub + Temperatur) sind zwei Sensoren auf der Karten und müssen im IPS getrennt angelegt werden.
+Zur Unterstützung der Konfiguration gibt es die Schaltfläche _Prüfe Konfigurætion_, die sowohl prüft, ob die Sensor-ID vorhanden ist als auch den gefundenen Sensortyp ausgibt.
 
 ## 4. Funktionsreferenz
 
 ### zentrale Funktion
 
-`Luftdaten_UpdateData(int $InstanzID)`
+`LuftdatenPublic_UpdateData(int $InstanzID)`
 
 ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
 ## 5. Konfiguration:
 
-### Variablen
+### Variablen (nur LuftdatenPublic)
 
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
-| UpdateDataInterval        | integer  | 5            | Angabe in Minuten |
+
+| sensor_id              | string   |              | Sensor-ID |
+| update_interval        | integer  | 60           | Angabe in Sekunden |
+
+Anmerkung: die Ermittlung der Messwerte wird in der jeweiligen Messstation eingetragen; der Standarwert sind 150s. Um also alle Messungen mitzubekommen muss man ein kürzeres Intervall wählen (daher 60s).
+
+### Variablen (alle)
+
+Die Bezeichnung der Sensoren entsprechen den in dem Projekt _Luftdaten.info_ verwendeten Bezeichnungen.
 
 ### Schaltflächen
 
 | Bezeichnung                  | Beschreibung |
 | :--------------------------: | :------------------------------------------------: |
+| Prüfe Konfiguration          | ruft einen Datensatz ab und prüft die Konfiguration dagegen |
 | Aktualisiere Daten           | führt eine sofortige Aktualisierung durch |
 
 ## 6. Anhang
