@@ -17,7 +17,7 @@ Modul für IP-Symcon ab Version 4.
 
 Das Projekt _Luftdaten.info_ ist ein Bürgerprojekt, um flächendeckend die Belastung mit Feinstaub zu messen. Um das erreichen zu können, wurden eine einfache Station entwickelt, die man ohne spezielle Kenntnisse bauen und in Betrieb nehmen kann. Neben dem zentrale Sensor für Feinstaub (PM2.5 und PM10) gibt weiter optionale Sensoren für Temperatur, Luftfeuchtigkeit und Luftdruck.
 
-Diese Daten werden vom Sensor zyklisch an api.luftdaten.info und Madavi.de übergeben und stehen dort zum Abruf bereit.
+Diese Daten werden vom Sensor zyklisch an _Luftdaten.info_ und _Madavi.de_ übergeben und stehen dort zum Abruf bereit.
 Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden mittels 
  - pull per http-get: das funktioniert nicht besonders gut, da das Modul nur während der Messungen aufwacht und zu anderen Zeit nicht erreichbar ist.
  - push per http-post: die Station kann die Daten nicht nur an die o.g. API übergeben sondern auch zusätzlich an eine lokale API.<br>
