@@ -202,7 +202,6 @@ trait LuftdatenLibrary
 
     private function createGlobals()
     {
-        $this->RegisterPropertyInteger('update_interval', 0);
         $this->RegisterPropertyBoolean('sensor_sds', false);
         $this->RegisterPropertyBoolean('sensor_pms', false);
         $this->RegisterPropertyBoolean('sensor_dht22', false);
