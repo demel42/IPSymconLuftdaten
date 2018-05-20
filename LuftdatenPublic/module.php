@@ -32,6 +32,7 @@ class LuftdatenPublic extends IPSModule
         parent::Create();
 
         $this->RegisterPropertyString('sensor_id', '');
+		$this->RegisterPropertyInteger('update_interval', 60);
 
         $this->createGlobals();
 
