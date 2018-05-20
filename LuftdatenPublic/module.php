@@ -56,7 +56,6 @@ class LuftdatenPublic extends IPSModule
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         if ($sensor_id == '') {
-            echo 'missing sensor-id';
             $ok = false;
         }
 
