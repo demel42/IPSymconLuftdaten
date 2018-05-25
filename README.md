@@ -1,4 +1,4 @@
-# Syslog
+# Luftdaten
 
 Modul für IP-Symcon ab Version 4.4
 
@@ -15,12 +15,12 @@ Modul für IP-Symcon ab Version 4.4
 
 ## 1. Funktionsumfang
 
-Das Projekt _Luftdaten.info_ ist ein Bürgerprojekt, um flächendeckend die Belastung mit Feinstaub zu messen. Um das erreichen zu können, wurden eine einfache Station entwickelt, die man ohne spezielle Kenntnisse bauen und in Betrieb nehmen kann. Neben dem zentrale Sensor für Feinstaub (PM2.5 und PM10) gibt weiter optionale Sensoren für Temperatur, Luftfeuchtigkeit und Luftdruck.
+Das Projekt _Luftdaten.info_ wurde von _OK Lab Stuttgart_ initiiert, um flächendeckend die Belastung mit Feinstaub zu messen. Um das erreichen zu können, wurden eine einfache Meßstation entwickelt, die man ohne spezielle Kenntnisse bauen und in Betrieb nehmen kann. Neben dem zentralen Sensor für Feinstaub (PM2.5 und PM10) gibt weiter optionale Sensoren für Temperatur, Luftfeuchtigkeit und Luftdruck. Die Station kommuniziert über WLAN.
 
-Diese Daten werden vom Sensor zyklisch an api.luftdaten.info und Madavi.de übergeben und stehen dort zum Abruf bereit.
-Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden mittels 
+Die Messdaten werden von der Station zyklisch an _Luftdaten.info_ und _Madavi.de_ übergeben und stehen dort zum Abruf bereit.
+Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden 
  - pull per http-get: das funktioniert nicht besonders gut, da das Modul nur während der Messungen aufwacht und zu anderen Zeit nicht erreichbar ist.
- - push per http-post: die Station kann die Daten nicht nur an die o.g. API übergeben sondern auch zusätzlich an eine lokale API.<br>
+ - push per http-post: die Station kann die Daten nicht nur an die o.g. API's übergeben sondern auch zusätzlich an eine lokale API.<br>
    Diese Variante ist hier per WebHook realisiert.
 
 ## 2. Voraussetzungen
