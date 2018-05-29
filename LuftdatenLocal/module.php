@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../libs/library.php';  // diverse Klassen
+require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/library.php';  // modul-bezogene Funktionen
 
 // Constants will be defined with IP-Symcon 5.0 and newer
 if (!defined('IPS_KERNELMESSAGE')) {
@@ -25,6 +26,7 @@ if (!defined('IPS_STRING')) {
 
 class LuftdatenLocal extends IPSModule
 {
+    use LuftdatenCommon;
     use LuftdatenLibrary;
 
     public function Create()
@@ -75,30 +77,6 @@ class LuftdatenLocal extends IPSModule
         // Only call this in READY state. On startup the WebHook instance might not be available yet
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->RegisterHook('/hook/Luftdaten');
-        }
-    }
-
-    // Inspired from module SymconTest/HookServe
-    private function RegisterHook($WebHook)
-    {
-        $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-        if (count($ids) > 0) {
-            $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
-            $found = false;
-            foreach ($hooks as $index => $hook) {
-                if ($hook['Hook'] == $WebHook) {
-                    if ($hook['TargetID'] == $this->InstanceID) {
-                        return;
-                    }
-                    $hooks[$index]['TargetID'] = $this->InstanceID;
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $hooks[] = ['Hook' => $WebHook, 'TargetID' => $this->InstanceID];
-            }
-            IPS_SetProperty($ids[0], 'Hooks', json_encode($hooks));
-            IPS_ApplyChanges($ids[0]);
         }
     }
 

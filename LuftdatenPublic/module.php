@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../libs/library.php';  // diverse Klassen
+require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/library.php';  // modul-bezogene Funktionen
 
 // Constants will be defined with IP-Symcon 5.0 and newer
 if (!defined('IPS_KERNELMESSAGE')) {
@@ -25,6 +26,7 @@ if (!defined('IPS_STRING')) {
 
 class LuftdatenPublic extends IPSModule
 {
+    use LuftdatenCommon;
     use LuftdatenLibrary;
 
     public function Create()
@@ -154,30 +156,32 @@ class LuftdatenPublic extends IPSModule
         $jdata = '';
         if ($httpcode != 200) {
             if ($httpcode == 404) {
-                $err = "got http-code $httpcode (page not found) from luftdaten.info";
+                $err = "got http-code $httpcode (page not found)";
                 $statuscode = 204;
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
                 $statuscode = 202;
-                $err = "got http-code $httpcode (server error) from luftdaten.info";
+                $err = "got http-code $httpcode (server error)";
             } else {
-                $err = "got http-code $httpcode from luftdaten.info";
+                $err = "got http-code $httpcode";
                 $statuscode = 203;
             }
         } elseif ($cdata == '') {
             $statuscode = 205;
-            $err = 'no data from luftdaten.info';
+            $err = 'no data';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
                 $statuscode = 205;
-                $err = 'malformed response from luftdaten.info';
+                $err = 'malformed response';
             }
         }
+
         if ($statuscode) {
             echo "url=$url => statuscode=$statuscode, err=$err";
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->SetStatus($statuscode);
         }
+
         return $jdata;
     }
 }
