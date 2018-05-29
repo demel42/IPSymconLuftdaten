@@ -60,6 +60,10 @@ class LuftdatenPublic extends IPSModule
             $ok = false;
         }
 
+        if ($sensors == []) {
+            $ok = false;
+        }
+
         $this->SetStatus($ok ? 102 : 201);
 
         $this->SetUpdateInterval();
