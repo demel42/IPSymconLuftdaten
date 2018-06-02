@@ -114,7 +114,7 @@ class LuftdatenPublic extends IPSModule
         if ($jdata == '') {
             return;
         }
-		$this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
+        $this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
         $max_ts = 0;
         $idx = 0;
