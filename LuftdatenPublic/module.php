@@ -114,6 +114,7 @@ class LuftdatenPublic extends IPSModule
         if ($jdata == '') {
             return;
         }
+		$this->SendDebug(__FUNCTION__, 'jdata=' . print_r($jdata, true), 0);
 
         $max_ts = 0;
         $idx = 0;
@@ -168,6 +169,9 @@ class LuftdatenPublic extends IPSModule
         } elseif ($cdata == '') {
             $statuscode = 205;
             $err = 'no data';
+        } elseif ($cdata == '[]') {
+            $statuscode = 205;
+            $err = 'empty response (unknown sensor?)';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
