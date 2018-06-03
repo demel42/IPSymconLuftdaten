@@ -25,14 +25,14 @@ Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden
 
 ## 2. Voraussetzungen
 
- - IPS 4.x
+ - ab IPS 4.4
  - eine eigene Sensor-Station gemäß Anleitung von https://luftdaten.info oder ein ausgewähler Sensor von http://deutschland.maps.luftdaten.info.
 
 ## 3. Installation
 
 ### a. Laden des Moduls
 
-Die IP-Symcon (min Ver. 4.x) Konsole öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
+Die Konsole von IP-Symcon öffnen. Im Objektbaum unter Kerninstanzen die Instanz __*Modules*__ durch einen doppelten Mausklick öffnen.
 
 In der _Modules_ Instanz rechts oben auf den Button __*Hinzufügen*__ drücken.
 
