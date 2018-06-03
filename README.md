@@ -25,7 +25,7 @@ Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden
 
 ## 2. Voraussetzungen
 
- - ab IPS 4.4
+ - IP-Symcon ab Version 4.4
  - eine eigene Sensor-Station gemäß Anleitung von https://luftdaten.info oder ein ausgewähler Sensor von http://deutschland.maps.luftdaten.info.
 
 ## 3. Installation
