@@ -20,7 +20,7 @@ trait LuftdatenCommon
         }
     }
 
-    private function GetValue($Ident)
+    protected function GetValue($Ident)
     {
         @$varID = $this->GetIDForIdent($Ident);
         if ($varID == false) {
