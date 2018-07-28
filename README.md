@@ -92,9 +92,8 @@ ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die
 
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
-
-| sensor_id              | string   |              | Sensor-ID |
-| update_interval        | integer  | 60           | Angabe in Sekunden |
+| Sensor-ID                 | string   |              | Sensor-ID |
+| Aktualisiere Daten ...    | integer  | 60           |  Aktualisierungsintervall, Angabe in Sekunden |
 
 Anmerkung: die Ermittlung der Messwerte wird in der jeweiligen Messstation eingetragen; der Standarwert sind 150s. Um also alle Messungen mitzubekommen muss man ein kürzeres Intervall wählen (daher 60s).
 
