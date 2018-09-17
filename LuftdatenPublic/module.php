@@ -11,18 +11,14 @@ if (!defined('KR_READY')) {
     define('KR_READY', 10103);
 }
 
-if (!defined('IPS_BOOLEAN')) {
-    define('IPS_BOOLEAN', 0);
-}
-if (!defined('IPS_INTEGER')) {
-    define('IPS_INTEGER', 1);
-}
-if (!defined('IPS_FLOAT')) {
-    define('IPS_FLOAT', 2);
-}
-if (!defined('IPS_STRING')) {
-    define('IPS_STRING', 3);
-}
+if (!defined('vtBoolean')) {
+    define('vtBoolean', 0);
+    define('vtInteger', 1);
+    define('vtFloat', 2);
+    define('vtString', 3);
+    define('vtArray', 8);
+    define('vtObject', 9);
+?
 
 class LuftdatenPublic extends IPSModule
 {

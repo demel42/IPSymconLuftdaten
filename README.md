@@ -1,7 +1,7 @@
 # IPSymconLuftdaten
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-4.4+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.0-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.1-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/134040833/shield?branch=master)](https://github.styleci.io/repos/134040833)
@@ -16,13 +16,14 @@
 4. [Funktionsreferenz](#4-funktionsreferenz)
 5. [Konfiguration](#5-konfiguration)
 6. [Anhang](#6-anhang)
+7. [Versions-Historie](#7-versions-historie)
 
 ## 1. Funktionsumfang
 
 Das Projekt _Luftdaten.info_ wurde von _OK Lab Stuttgart_ initiiert, um flächendeckend die Belastung mit Feinstaub zu messen. Um das erreichen zu können, wurden eine einfache Meßstation entwickelt, die man ohne spezielle Kenntnisse bauen und in Betrieb nehmen kann. Neben dem zentralen Sensor für Feinstaub (PM2.5 und PM10) gibt weiter optionale Sensoren für Temperatur, Luftfeuchtigkeit und Luftdruck. Die Station kommuniziert über WLAN.
 
 Die Messdaten werden von der Station zyklisch an _Luftdaten.info_ und _Madavi.de_ übergeben und stehen dort zum Abruf bereit.
-Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden 
+Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden
  - pull per http-get: das funktioniert nicht besonders gut, da das Modul nur während der Messungen aufwacht und zu anderen Zeit nicht erreichbar ist.
  - push per http-post: die Station kann die Daten nicht nur an die o.g. API's übergeben sondern auch zusätzlich an eine lokale API.<br>
    Diese Variante ist hier per WebHook realisiert.
@@ -116,3 +117,13 @@ GUIDs
 - Instanzen:
   - LuftdatenPublic: `{60899603-A710-4B6C-A0C4-5F373251BE46}`
   - LuftdatenLocal: `{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}`
+
+## 7. Versions-Historie
+
+- 1.1 @ 17.09.2018 17:13<br>
+  - Versionshistorie dazu,
+  - define's der Variablentypen,
+  - Schaltfläche mit Link zu README.md im Konfigurationsdialog
+
+- 1.0 @ 18.05.2018 15:31<br>
+   Initiale Version

@@ -10,6 +10,8 @@
 			"humidity": "Luftfeuchtigkeit",
 			"wifi-signal": "Wifi-Signal",
 
+			"Module description": "Modulbeschreibung",
+
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
 			"Instance is inactive": "Instanz ist inaktiv",

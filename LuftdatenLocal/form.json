@@ -14,6 +14,11 @@
 				{ "type": "CheckBox", "name": "sensor_bme280", "caption": " ... BME280" },
 				{ "type": "CheckBox", "name": "sensor_ds18b20", "caption": " ... DS18B20" }
 			],
+	"action":
+			[
+				{ "type": "Label", "label": "____________________________________________________________________________________________________" },
+				{ "type": "Button", "label": "Module description", "onClick": "echo 'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md';" }
+			],
 	"status":
 			[
 				{ "code": 101, "icon": "inactive", "caption": "Instance getting created" },
