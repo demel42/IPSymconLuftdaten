@@ -18,7 +18,7 @@ if (!defined('vtBoolean')) {
     define('vtString', 3);
     define('vtArray', 8);
     define('vtObject', 9);
-?
+}
 
 class LuftdatenPublic extends IPSModule
 {
