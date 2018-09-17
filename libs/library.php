@@ -1,5 +1,14 @@
 <?php
 
+if (!defined('vtBoolean')) {
+	define('vtBoolean', 0);
+	define('vtInteger', 1);
+	define('vtFloat', 2);
+	define('vtString', 3);
+	define('vtArray', 8);
+	define('vtObject', 9);
+}
+
 trait LuftdatenLibrary
 {
     private function getSensors()
@@ -169,7 +178,7 @@ trait LuftdatenLibrary
         $idents = $this->getIdents($isLocal);
 
         $vpos = 1;
-        $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), IPS_INTEGER, '~UnixTimestamp', $vpos++, true);
+        $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), vtInteger, '~UnixTimestamp', $vpos++, true);
         foreach ($ident_map as $ident => $entry) {
             $this->SendDebug(__FUNCTION__, 'ident=' . $ident . ', entry=' . print_r($entry, true), 0);
             $use = in_array($ident, $idents);
@@ -180,19 +189,19 @@ trait LuftdatenLibrary
             $datatype = $entry['datatype'];
             switch ($datatype) {
                 case 'pm':
-                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.PM', $vpos++, $use);
+                    $this->MaintainVariable($ident, $this->Translate($name), vtFloat, 'Luftdaten.PM', $vpos++, $use);
                     break;
                 case 'temperature':
-                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Temperatur', $vpos++, $use);
+                    $this->MaintainVariable($ident, $this->Translate($name), vtFloat, 'Luftdaten.Temperatur', $vpos++, $use);
                     break;
                 case 'humidity':
-                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Humidity', $vpos++, $use);
+                    $this->MaintainVariable($ident, $this->Translate($name), vtFloat, 'Luftdaten.Humidity', $vpos++, $use);
                     break;
                 case 'signal':
-                    $this->MaintainVariable($ident, $this->Translate($name), IPS_INTEGER, 'Luftdaten.Wifi', $vpos++, $use);
+                    $this->MaintainVariable($ident, $this->Translate($name), vtInteger, 'Luftdaten.Wifi', $vpos++, $use);
                     break;
                 case 'pressure':
-                    $this->MaintainVariable($ident, $this->Translate($name), IPS_FLOAT, 'Luftdaten.Pressure', $vpos++, $use);
+                    $this->MaintainVariable($ident, $this->Translate($name), vtFloat, 'Luftdaten.Pressure', $vpos++, $use);
                     break;
                 default:
                     break;
@@ -212,11 +221,11 @@ trait LuftdatenLibrary
         $this->RegisterPropertyBoolean('sensor_bme280', false);
         $this->RegisterPropertyBoolean('sensor_ds18b20', false);
 
-        $this->CreateVarProfile('Luftdaten.PM', IPS_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
-        $this->CreateVarProfile('Luftdaten.Temperatur', IPS_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Luftdaten.Humidity', IPS_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Luftdaten.Pressure', IPS_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Luftdaten.Wifi', IPS_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
+        $this->CreateVarProfile('Luftdaten.PM', vtFloat, ' µg/m³', 0, 0, 0, 1, 'Snow');
+        $this->CreateVarProfile('Luftdaten.Temperatur', vtFloat, ' °C', -10, 30, 0, 1, 'Temperature');
+        $this->CreateVarProfile('Luftdaten.Humidity', vtFloat, ' %', 0, 0, 0, 0, 'Drops');
+        $this->CreateVarProfile('Luftdaten.Pressure', vtFloat, ' mbar', 0, 0, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Luftdaten.Wifi', vtInteger, ' dBm', 0, 0, 0, 0, 'Intensity');
     }
 
     private function decodeData($sensordatavalues, $isLocal)
