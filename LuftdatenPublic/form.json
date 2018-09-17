@@ -22,7 +22,7 @@
 				{ "type": "Button", "label": "Verify Configuration", "onClick": "LuftdatenPublic_VerifyConfiguration($id);" },
 				{ "type": "Button", "label": "Update Data", "onClick": "LuftdatenPublic_UpdateData($id);" },
 				{ "type": "Label", "label": "____________________________________________________________________________________________________" },
-				{ "type": "Button", "label": "Module description", "onClick": "echo 'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md';"
+				{ "type": "Button", "label": "Module description", "onClick": "echo 'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md';" }
 			],		
 	"status":
 			[
