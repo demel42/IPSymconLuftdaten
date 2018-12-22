@@ -175,7 +175,7 @@ class LuftdatenPublic extends IPSModule
         }
 
         if ($statuscode) {
-            echo "url=$url => statuscode=$statuscode, err=$err";
+			$this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->SetStatus($statuscode);
         }
