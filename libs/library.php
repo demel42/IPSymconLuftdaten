@@ -65,7 +65,7 @@ trait LuftdatenLibrary
             $sensor_map['HTU21D'] = ['HTU21D_temperature', 'HTU21D_humidity'];
             $sensor_map['PPD42NS'] = ['P1', 'P2']; // 'durP1', 'ratioP1', 'durP2', 'ratioP2'
             $sensor_map['BMP180'] = ['BMP_temperature', 'BMP_pressure'];
-            $sensor_map['BMP280'] = ['BMP_temperature', 'BMP_pressure'];
+            $sensor_map['BMP280'] = ['BMP280_temperature', 'BMP280_pressure'];
             $sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
             $sensor_map['DS18B20'] = ['DS18B20_temperature'];
             $sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
@@ -147,6 +147,8 @@ trait LuftdatenLibrary
         $ident_map['SDS_P2'] = ['name' => 'PM2.5', 'datatype' => 'pm'];
         $ident_map['BMP_temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
         $ident_map['BMP_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
+        $ident_map['BMP280_temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
+        $ident_map['BMP280_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
         $ident_map['BME280_temperature'] = ['name' => 'temperature', 'datatype' => 'temperature'];
         $ident_map['BME280_humidity'] = ['name' => 'humidity', 'datatype' => 'humidity'];
         $ident_map['BME280_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];

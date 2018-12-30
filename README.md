@@ -1,7 +1,7 @@
 # IPSymconLuftdaten
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-4.4+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.3-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.4-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/134040833/shield?branch=master)](https://github.styleci.io/repos/134040833)
@@ -119,6 +119,9 @@ GUIDs
   - LuftdatenLocal: `{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}`
 
 ## 7. Versions-Historie
+
+- 1.4 @ 30.12.2018 15:26<br>
+  - Werte für den Sensor _BMP280_ haben nicht (wie in der Doku steht) den Prefix _BMP_ sondern _BMP280_
 
 - 1.3 @ 22.12.2018 11:37<br>
   - Fehler in der http-Kommunikation nun nicht mehr mit _echo_ (also als **ERROR**) sondern mit _LogMessage_ als **NOTIFY**
