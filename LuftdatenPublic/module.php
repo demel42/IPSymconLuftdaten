@@ -12,7 +12,7 @@ class LuftdatenPublic extends IPSModule
     {
         parent::Create();
 
-		$this->RegisterPropertyBoolean('module_disable', false);
+        $this->RegisterPropertyBoolean('module_disable', false);
 
         $this->RegisterPropertyString('sensor_id', '');
         $this->RegisterPropertyInteger('update_interval', 60);
@@ -47,12 +47,12 @@ class LuftdatenPublic extends IPSModule
             $ok = false;
         }
 
-		$module_disable = $this->ReadPropertyBoolean('module_disable');
-		if ($module_disable) {
-		    $this->SetTimerInterval('UpdateData', 0);
-			$this->SetStatus(IS_INACTIVE);
-			return;
-		}
+        $module_disable = $this->ReadPropertyBoolean('module_disable');
+        if ($module_disable) {
+            $this->SetTimerInterval('UpdateData', 0);
+            $this->SetStatus(IS_INACTIVE);
+            return;
+        }
 
         $this->SetStatus($ok ? IS_ACTIVE : IS_INVALIDCONFIG);
         $this->SetUpdateInterval();
@@ -61,7 +61,7 @@ class LuftdatenPublic extends IPSModule
     public function GetConfigurationForm()
     {
         $formElements = [];
-		$formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
         $formElements[] = ['type' => 'Label', 'label' => 'get data from api.luftdaten.info'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'sensor_id', 'caption' => 'Sensor-ID'];
         $formElements[] = ['type' => 'Label', 'label' => 'Update data every X seconds'];
@@ -101,13 +101,12 @@ class LuftdatenPublic extends IPSModule
 
     public function VerifyConfiguration()
     {
-
-		$inst = IPS_GetInstance($this->InstanceID);
-		if ($inst['InstanceStatus'] == IS_INACTIVE) {
-			$this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
-			echo $this->translate('Instance is inactive') . PHP_EOL;
-			return;
-		}
+        $inst = IPS_GetInstance($this->InstanceID);
+        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            echo $this->translate('Instance is inactive') . PHP_EOL;
+            return;
+        }
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
@@ -143,11 +142,11 @@ class LuftdatenPublic extends IPSModule
 
     public function UpdateData()
     {
-		$inst = IPS_GetInstance($this->InstanceID);
-		if ($inst['InstanceStatus'] == IS_INACTIVE) {
-			$this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
-			return;
-		}
+        $inst = IPS_GetInstance($this->InstanceID);
+        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            return;
+        }
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';

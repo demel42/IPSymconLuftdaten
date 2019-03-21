@@ -88,7 +88,7 @@ class LuftdatenLocal extends IPSModule
         $formStatus[] = ['code' => IS_NOSENSOR, 'icon' => 'error', 'caption' => 'Instance is inactive (no sensor)'];
 
         return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-	}
+    }
 
     // Inspired from module SymconTest/HookServe
     protected function ProcessHookData()
