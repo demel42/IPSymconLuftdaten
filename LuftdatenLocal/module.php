@@ -77,7 +77,7 @@ class LuftdatenLocal extends IPSModule
     // Inspired from module SymconTest/HookServe
     protected function ProcessHookData()
     {
-        $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
+        $this->SendDebug(__FUNCTION__, '_SERVER=' . print_r($_SERVER, true), 0);
 
         $root = realpath(__DIR__);
         $uri = $_SERVER['REQUEST_URI'];
