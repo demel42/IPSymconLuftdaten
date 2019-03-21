@@ -3,21 +3,6 @@
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 require_once __DIR__ . '/../libs/library.php';  // modul-bezogene Funktionen
 
-// Constants will be defined with IP-Symcon 5.0 and newer
-if (!defined('IPS_KERNELMESSAGE')) {
-    define('IPS_KERNELMESSAGE', 10100);
-}
-if (!defined('KR_READY')) {
-    define('KR_READY', 10103);
-}
-
-if (!defined('VARIABLETYPE_BOOLEAN')) {
-    define('VARIABLETYPE_BOOLEAN', 0);
-    define('VARIABLETYPE_INTEGER', 1);
-    define('VARIABLETYPE_FLOAT', 2);
-    define('VARIABLETYPE_STRING', 3);
-}
-
 class LuftdatenPublic extends IPSModule
 {
     use LuftdatenCommon;
@@ -26,6 +11,8 @@ class LuftdatenPublic extends IPSModule
     public function Create()
     {
         parent::Create();
+
+		$this->RegisterPropertyBoolean('module_disable', false);
 
         $this->RegisterPropertyString('sensor_id', '');
         $this->RegisterPropertyInteger('update_interval', 60);
@@ -60,13 +47,68 @@ class LuftdatenPublic extends IPSModule
             $ok = false;
         }
 
-        $this->SetStatus($ok ? 102 : 201);
+		$module_disable = $this->ReadPropertyBoolean('module_disable');
+		if ($module_disable) {
+		    $this->SetTimerInterval('UpdateData', 0);
+			$this->SetStatus(IS_INACTIVE);
+			return;
+		}
 
+        $this->SetStatus($ok ? IS_ACTIVE : IS_INVALIDCONFIG);
         $this->SetUpdateInterval();
+    }
+
+    public function GetConfigurationForm()
+    {
+        $formElements = [];
+		$formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
+        $formElements[] = ['type' => 'Label', 'label' => 'get data from api.luftdaten.info'];
+        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'sensor_id', 'caption' => 'Sensor-ID'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Update data every X seconds'];
+        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'update_interval', 'caption' => 'Seconds'];
+        $formElements[] = ['type' => 'Label', 'label' => 'Sensor'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_sds', 'caption' => ' ... SDS011'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_dht22', 'caption' => ' ... DHT22'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_htu21d', 'caption' => ' ... HTU21D'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ppd', 'caption' => ' ... PPD42NS'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bmp180', 'caption' => ' ... BMP180'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bmp280', 'caption' => ' ... BMP280'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bme280', 'caption' => ' ... BME280'];
+        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'];
+
+        $formActions = [];
+        $formActions[] = ['type' => 'Button', 'label' => 'Verify Configuration', 'onClick' => 'LuftdatenPublic_VerifyConfiguration($id);'];
+        $formActions[] = ['type' => 'Button', 'label' => 'Update Data', 'onClick' => 'LuftdatenPublic_UpdateData($id);'];
+        $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+        $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
+
+        $formStatus = [];
+        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
+        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
+        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
+        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
+        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+
+        $formStatus[] = ['code' => IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
+        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
+        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
+        $formStatus[] = ['code' => IS_PAGENOTFOUND, 'icon' => 'error', 'caption' => 'Instance is inactive (page not found)'];
+        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
+
+        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
     }
 
     public function VerifyConfiguration()
     {
+
+		$inst = IPS_GetInstance($this->InstanceID);
+		if ($inst['InstanceStatus'] == IS_INACTIVE) {
+			$this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+			echo $this->translate('Instance is inactive') . PHP_EOL;
+			return;
+		}
+
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
@@ -101,6 +143,12 @@ class LuftdatenPublic extends IPSModule
 
     public function UpdateData()
     {
+		$inst = IPS_GetInstance($this->InstanceID);
+		if ($inst['InstanceStatus'] == IS_INACTIVE) {
+			$this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+			return;
+		}
+
         $sensor_id = $this->ReadPropertyString('sensor_id');
         $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
 
@@ -125,7 +173,7 @@ class LuftdatenPublic extends IPSModule
 
         $sensordatavalues = $jdata[$idx]['sensordatavalues'];
         $this->decodeData($sensordatavalues, false);
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
     }
 
     private function do_HttpRequest($url)
@@ -152,29 +200,29 @@ class LuftdatenPublic extends IPSModule
         $err = '';
         $jdata = '';
         if ($cerrno) {
-            $statuscode = 204;
+            $statuscode = IS_HTTPERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
         } elseif ($httpcode != 200) {
             if ($httpcode == 404) {
                 $err = 'got http-code ' . $httpcode . ' (page not found)';
-                $statuscode = 204;
+                $statuscode = IS_PAGENOTFOUND;
             } elseif ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = 202;
+                $statuscode = IS_SERVERERROR;
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } else {
                 $err = 'got http-code ' . $httpcode;
-                $statuscode = 203;
+                $statuscode = IS_HTTPERROR;
             }
         } elseif ($cdata == '') {
-            $statuscode = 205;
+            $statuscode = IS_INVALIDDATA;
             $err = 'no data';
         } elseif ($cdata == '[]') {
-            $statuscode = 205;
+            $statuscode = IS_INVALIDDATA;
             $err = 'empty response (unknown sensor?)';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
-                $statuscode = 205;
+                $statuscode = IS_INVALIDDATA;
                 $err = 'malformed response';
             }
         }

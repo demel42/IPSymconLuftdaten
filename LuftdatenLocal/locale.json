@@ -14,7 +14,9 @@
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
+			"Instance is deleted": "Instanz wird gelöscht",
 			"Instance is inactive": "Instanz ist inaktiv",
+			"Instance is not created": "Instanz wurde nicht erzeugt",
 
 			"Instance is inactive (no sensor)": "Instanz ist inaktiv (kein Sensor)"
 		}

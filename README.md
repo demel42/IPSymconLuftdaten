@@ -1,7 +1,7 @@
 # IPSymconLuftdaten
 
-[![IPS-Version](https://img.shields.io/badge/Symcon_Version-4.4+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.5-blue.svg)
+[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.6-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/134040833/shield?branch=master)](https://github.styleci.io/repos/134040833)
@@ -30,7 +30,8 @@ Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 4.4
+ - IP-Symcon ab Version 5<br>
+   Version 4.4 mit Branch _ips_4.4_ (nur noch Fehlerkorrekturen)
  - eine eigene Sensor-Station gemäß Anleitung von https://luftdaten.info oder ein ausgewähler Sensor von http://deutschland.maps.luftdaten.info.
 
 ## 3. Installation
@@ -93,6 +94,8 @@ ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die
 
 | Eigenschaft               | Typ      | Standardwert | Beschreibung |
 | :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
+| Instanz ist deaktiviert   | boolean  | false        | Instanz temporär deaktivieren |
+|                           |          |              | |
 | Sensor-ID                 | string   |              | Sensor-ID |
 | Aktualisiere Daten ...    | integer  | 60           |  Aktualisierungsintervall, Angabe in Sekunden |
 
@@ -119,6 +122,12 @@ GUIDs
   - LuftdatenLocal: `{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}`
 
 ## 7. Versions-Historie
+
+- 1.6 @ 21.03.2019 17:04<br>
+  - Anpassungen IPS 5, Abspaltung von Branch _ips_4.4_
+  - Schalter, um ein Modul (temporär) zu deaktivieren
+  - form.json in GetConfigurationForm() abgebildet
+  - Konfigurations-Element IntervalBox -> NumberSpinner
 
 - 1.5 @ 23.01.2019 18:18<br>
   - curl_errno() abfragen

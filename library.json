@@ -4,9 +4,9 @@
 	"name": "IPSymconLuftdaten",
 	"url": "https://github.com/demel42/IPSymconLuftdaten",
 	"compatibility": {
-		"version": "4.4"
+		"version": "5.0"
 	},
-	"version": "1.5",
+	"version": "1.6",
 	"build": 0,
-	"date": 1548263914
+	"date": 1553184283
 }
