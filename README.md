@@ -54,9 +54,10 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie, unter der man die Instanz hinzufügen will, und Hersteller _Luftdaten.info_ auswählen.
 Es werden zwei Module angeboten:
- - lokale Sensor-Station - das ist für eine lokal installiertes Sensor-Station
- - öffentliche Webseite - das ist zu verwenden für jeweils einen Sensor von http://deutschland.maps.luftdaten.info.
-je nach Wunsch das entsprechende Gerät auswählen.
+ - lokale Sensor-Station<br>
+ das ist für den Abruf der Daten einer lokal installierte Sensor-Station mit allen Sensoren.
+ - öffentliche Webseite<br>
+das dient dem Abruf von Sensordaten von http://deutschland.maps.luftdaten.info. Es muss für jeden Sensor eine eigenen Instanz angelehgt werden.
 
 #### Konfiguration für ein eigenen Luftdaten-Sensor
 
