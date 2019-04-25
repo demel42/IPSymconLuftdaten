@@ -57,7 +57,7 @@ Es werden zwei Module angeboten:
  - lokale Sensor-Station<br>
  das ist für den Abruf der Daten einer lokal installierte Sensor-Station mit allen Sensoren.
  - öffentliche Webseite<br>
-das dient dem Abruf von Sensordaten von http://deutschland.maps.luftdaten.info. Es muss für jeden Sensor eine eigenen Instanz angelehgt werden.
+das dient dem Abruf von Sensordaten von http://deutschland.maps.luftdaten.info. Es muss für jeden Sensor eine eigene Instanz angelegt werden.
 
 #### Konfiguration für ein eigenen Luftdaten-Sensor
 
