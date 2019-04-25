@@ -66,12 +66,12 @@ Es wird hierfür ein WebHoom _hook/Luftdaten_ eingerichtet.
 
 Auf der Konfigurationsseite des Sensor-Moduls muss die Datenübertragung noch parametriert werden
 
-| Eigenschaft               | Beschreibung |
-| :-----------------------: | :----------------------------------------------------------------------------------------------------------: |
-| An eigene API senden      | aktivieren |
-| Server	                | IP-Adresse des IPS-Servers |
-| Pfad	                    | _/hook/Luftdaten_ |
-| Port	                    | _3777_ |
+| Eigenschaft          | Beschreibung |
+| :------------------- | :----------- |
+| An eigene API senden | aktivieren |
+| Server	           | IP-Adresse des IPS-Servers |
+| Pfad	               | _/hook/Luftdaten_ |
+| Port	               | _3777_ |
 
 Es wird nur eine lokale Sensor-Station unterstützt.
 
@@ -92,12 +92,12 @@ ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die
 
 ### Variablen (nur LuftdatenPublic)
 
-| Eigenschaft               | Typ      | Standardwert | Beschreibung |
-| :-----------------------: | :-----:  | :----------: | :----------------------------------------------------------------------------------------------------------: |
-| Instanz ist deaktiviert   | boolean  | false        | Instanz temporär deaktivieren |
-|                           |          |              | |
-| Sensor-ID                 | string   |              | Sensor-ID |
-| Aktualisiere Daten ...    | integer  | 60           |  Aktualisierungsintervall, Angabe in Sekunden |
+| Eigenschaft             | Typ     | Standardwert | Beschreibung |
+| :---------------------- | :------ | :----------- | :----------- |
+| Instanz ist deaktiviert | boolean | false        | Instanz temporär deaktivieren |
+|                         |         |              | |
+| Sensor-ID               | string  |              | Sensor-ID |
+| Aktualisiere Daten ...  | integer | 60           | Aktualisierungsintervall, Angabe in Sekunden |
 
 Anmerkung: die Ermittlung der Messwerte wird in der jeweiligen Messstation eingetragen; der Standarwert sind 150s. Um also alle Messungen mitzubekommen muss man ein kürzeres Intervall wählen (daher 60s).
 
@@ -107,10 +107,10 @@ Die Bezeichnung der Sensoren entsprechen den in dem Projekt _Luftdaten.info_ ver
 
 ### Schaltflächen
 
-| Bezeichnung                  | Beschreibung |
-| :--------------------------: | :------------------------------------------------: |
-| Prüfe Konfiguration          | ruft einen Datensatz ab und prüft die Konfiguration dagegen |
-| Aktualisiere Daten           | führt eine sofortige Aktualisierung durch |
+| Bezeichnung         | Beschreibung |
+| :------------------ | :----------- |
+| Prüfe Konfiguration | ruft einen Datensatz ab und prüft die Konfiguration dagegen |
+| Aktualisiere Daten  | führt eine sofortige Aktualisierung durch |
 
 ## 6. Anhang
 
