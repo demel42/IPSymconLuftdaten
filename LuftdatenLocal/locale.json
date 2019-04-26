@@ -2,7 +2,7 @@
 	"translations": {
 		"de": {
 			"receive data from local sensor-station": "Daten von lokaler Sensor-Station empfangen",
-			"installed sensors (see config-page of station-station)": "installierte Sensoren (siehe Konfiguration der Sensor-Station)",
+			"installed sensors (see config-page of sensor-station)": "installierte Sensoren (siehe Konfiguration der Sensor-Station)",
 
 			"last transmission": "letzte Übertragung",
 			"temperature": "Temperatur",
