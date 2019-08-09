@@ -1,7 +1,7 @@
 # IPSymconLuftdaten
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.8-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.9-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![StyleCI](https://github.styleci.io/repos/134040833/shield?branch=master)](https://github.styleci.io/repos/134040833)
@@ -123,6 +123,9 @@ GUIDs
   - LuftdatenLocal: `{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}`
 
 ## 7. Versions-Historie
+
+- 1.9 @ 09.08.2019 14:32<br>
+  - Schreibfehler korrigiert
 
 - 1.8 @ 26.04.2019 16:44<br>
   - Übersetzung korrigiert
