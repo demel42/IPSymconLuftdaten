@@ -1,12 +1,12 @@
 {
 	"id": "{F3ACD08B-992B-4B5B-8B84-5128AED488C0}",
 	"author": "Ch. Damsky",
-	"name": "IPSymconLuftdaten",
+	"name": "Luftdaten.info",
 	"url": "https://github.com/demel42/IPSymconLuftdaten",
 	"compatibility": {
 		"version": "5.0"
 	},
-	"version": "1.9",
+	"version": "1.10",
 	"build": 0,
-	"date": 1565353933
+	"date": 1569515041
 }

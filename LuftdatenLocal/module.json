@@ -9,5 +9,6 @@
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "LuftdatenLocal"
+	"prefix": "LuftdatenLocal",
+	"url": "https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md"
 }
