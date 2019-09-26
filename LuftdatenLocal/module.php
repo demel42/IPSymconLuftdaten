@@ -75,10 +75,10 @@ class LuftdatenLocal extends IPSModule
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'];
 
         $formActions = [];
-		if (IPS_GetKernelVersion() < 5.2) {
-        $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
-        $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
-		}
+        if (IPS_GetKernelVersion() < 5.2) {
+            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
+        }
 
         $formStatus = [];
         $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];

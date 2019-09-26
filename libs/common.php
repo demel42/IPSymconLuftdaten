@@ -49,10 +49,10 @@ trait LuftdatenCommon
         if (!IPS_VariableProfileExists($Name)) {
             IPS_CreateVariableProfile($Name, $ProfileType);
             IPS_SetVariableProfileText($Name, '', $Suffix);
-			if (IPS_GetKernelVersion() < 5.2) {
-            IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-            IPS_SetVariableProfileDigits($Name, $Digits);
-			}
+            if (IPS_GetKernelVersion() < 5.2) {
+                IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+                IPS_SetVariableProfileDigits($Name, $Digits);
+            }
             IPS_SetVariableProfileIcon($Name, $Icon);
             if ($Associations != '') {
                 foreach ($Associations as $a) {
