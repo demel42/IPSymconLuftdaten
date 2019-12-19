@@ -64,8 +64,8 @@ class LuftdatenLocal extends IPSModule
     public function GetConfigurationForm()
     {
         $formElements = [];
-        $formElements[] = ['type' => 'Label', 'label' => 'receive data from local sensor-station'];
-        $formElements[] = ['type' => 'Label', 'label' => 'installed sensors (see config-page of sensor-station)'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'receive data from local sensor-station'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'installed sensors (see config-page of sensor-station)'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_sds', 'caption' => ' ... SDS011'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_dht22', 'caption' => ' ... DHT22'];
@@ -78,8 +78,8 @@ class LuftdatenLocal extends IPSModule
 
         $formActions = [];
         if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
-            $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
+            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Button', 'caption' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
         }
 
         $formStatus = [];

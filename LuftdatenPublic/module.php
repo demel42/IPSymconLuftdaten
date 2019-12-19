@@ -64,11 +64,11 @@ class LuftdatenPublic extends IPSModule
     {
         $formElements = [];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
-        $formElements[] = ['type' => 'Label', 'label' => 'get data from api.luftdaten.info'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'get data from api.luftdaten.info'];
         $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'sensor_id', 'caption' => 'Sensor-ID'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Update data every X seconds'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Update data every X seconds'];
         $formElements[] = ['type' => 'NumberSpinner', 'name' => 'update_interval', 'caption' => 'Seconds'];
-        $formElements[] = ['type' => 'Label', 'label' => 'Sensor'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Sensor'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_sds', 'caption' => ' ... SDS011'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'];
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_dht22', 'caption' => ' ... DHT22'];
@@ -80,11 +80,11 @@ class LuftdatenPublic extends IPSModule
         $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'];
 
         $formActions = [];
-        $formActions[] = ['type' => 'Button', 'label' => 'Verify Configuration', 'onClick' => 'LuftdatenPublic_VerifyConfiguration($id);'];
-        $formActions[] = ['type' => 'Button', 'label' => 'Update Data', 'onClick' => 'LuftdatenPublic_UpdateData($id);'];
+        $formActions[] = ['type' => 'Button', 'caption' => 'Verify Configuration', 'onClick' => 'LuftdatenPublic_VerifyConfiguration($id);'];
+        $formActions[] = ['type' => 'Button', 'caption' => 'Update Data', 'onClick' => 'LuftdatenPublic_UpdateData($id);'];
         if (IPS_GetKernelVersion() < 5.2) {
-            $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
-            $formActions[] = ['type' => 'Button', 'label' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
+            $formActions[] = ['type' => 'Label', 'caption' => '____________________________________________________________________________________________________'];
+            $formActions[] = ['type' => 'Button', 'caption' => 'Module description', 'onClick' => 'echo \'https://github.com/demel42/IPSymconLuftdaten/blob/master/README.md\';'];
         }
 
         $formStatus = [];

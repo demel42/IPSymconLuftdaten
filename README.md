@@ -1,7 +1,7 @@
 # IPSymconLuftdaten
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.10-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.11-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -123,44 +123,48 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.10 @ 10.10.2019 17:27<br>
+- 1.11 @ 19.12.2019 14:09
+  - Anpassungen an IPS 5.3
+    - Formular-Elemente: 'label' in 'caption' geändert
+
+- 1.10 @ 10.10.2019 17:27
   - Anpassungen an IPS 5.2
     - IPS_SetVariableProfileValues(), IPS_SetVariableProfileDigits() nur bei INTEGER, FLOAT
     - Dokumentation-URL in module.json
   - Umstellung auf strict_types=1
   - Umstellung von StyleCI auf php-cs-fixer
 
-- 1.9 @ 09.08.2019 14:32<br>
+- 1.9 @ 09.08.2019 14:32
   - Schreibfehler korrigiert
 
-- 1.8 @ 26.04.2019 16:44<br>
+- 1.8 @ 26.04.2019 16:44
   - Übersetzung korrigiert
 
-- 1.7 @ 29.03.2019 16:19<br>
+- 1.7 @ 29.03.2019 16:19
   - SetValue() abgesichert
 
-- 1.6 @ 21.03.2019 17:04<br>
+- 1.6 @ 21.03.2019 17:04
   - Anpassungen IPS 5, Abspaltung von Branch _ips_4.4_
   - Schalter, um ein Modul (temporär) zu deaktivieren
   - form.json in GetConfigurationForm() abgebildet
   - Konfigurations-Element IntervalBox -> NumberSpinner
 
-- 1.5 @ 23.01.2019 18:18<br>
+- 1.5 @ 23.01.2019 18:18
   - curl_errno() abfragen
 
-- 1.4 @ 30.12.2018 15:26<br>
+- 1.4 @ 30.12.2018 15:26
   - Werte für den Sensor _BMP280_ haben nicht (wie in der Doku steht) den Prefix _BMP_ sondern _BMP280_
 
-- 1.3 @ 22.12.2018 11:37<br>
+- 1.3 @ 22.12.2018 11:37
   - Fehler in der http-Kommunikation nun nicht mehr mit _echo_ (also als **ERROR**) sondern mit _LogMessage_ als **NOTIFY**
 
-- 1.2 @ 21.12.2018 13:10<br>
+- 1.2 @ 21.12.2018 13:10
   - Standard-Konstanten verwenden
 
-- 1.1 @ 17.09.2018 17:13<br>
-  - Versionshistorie dazu,
-  - define's der Variablentypen,
+- 1.1 @ 17.09.2018 17:13
+  - Versionshistorie dazu
+  - define's der Variablentypen
   - Schaltfläche mit Link zu README.md im Konfigurationsdialog
 
-- 1.0 @ 18.05.2018 15:31<br>
-   Initiale Version
+- 1.0 @ 18.05.2018 15:31
+  - Initiale Version
