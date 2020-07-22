@@ -2,23 +2,7 @@
 
 declare(strict_types=1);
 
-if (!defined('VARIABLETYPE_BOOLEAN')) {
-    define('VARIABLETYPE_BOOLEAN', 0);
-    define('VARIABLETYPE_INTEGER', 1);
-    define('VARIABLETYPE_FLOAT', 2);
-    define('VARIABLETYPE_STRING', 3);
-}
-
-if (!defined('IS_NOSENSOR')) {
-    define('IS_NOSENSOR', IS_EBASE + 1);
-    define('IS_INVALIDCONFIG', IS_EBASE + 2);
-    define('IS_SERVERERROR', IS_EBASE + 3);
-    define('IS_HTTPERROR', IS_EBASE + 4);
-    define('IS_PAGENOTFOUND', IS_EBASE + 5);
-    define('IS_INVALIDDATA', IS_EBASE + 6);
-}
-
-trait LuftdatenCommon
+trait LuftdatenCommonLib
 {
     protected function SetValue($Ident, $Value)
     {

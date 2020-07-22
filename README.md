@@ -122,8 +122,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.12 @ 13.07.2020 14:56
+- 1.12 @ 22.07.2020 15:40 (beta)
   - LICENSE.md hinzugefügt
+  - define's durch statische Klassen-Variablen ersetzt
+  - library.php in local.php umbenannt
+  - lokale Funktionen aus common.php in locale.php verlagert
 
 - 1.11 @ 30.12.2019 10:56
   - Anpassungen an IPS 5.3

@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/library.php';  // modul-bezogene Funktionen
+require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class LuftdatenLocal extends IPSModule
 {
-    use LuftdatenCommon;
-    use LuftdatenLibrary;
+    use LuftdatenCommonLib;
+    use LuftdatenLocalLib;
 
     public function Create()
     {
@@ -16,12 +16,9 @@ class LuftdatenLocal extends IPSModule
 
         $this->createGlobals();
 
-        // Inspired by module SymconTest/HookServe
-        // We need to call the RegisterHook function on Kernel READY
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    // Inspired by module SymconTest/HookServe
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
@@ -49,48 +46,16 @@ class LuftdatenLocal extends IPSModule
 
         $sensors = $this->getSensors();
         if ($sensors == []) {
-            $statuscode = IS_NOSENSOR;
+            $statuscode = self::$IS_NOSENSOR;
         }
 
         $this->SetStatus($statuscode);
 
-        // Inspired by module SymconTest/HookServe
-        // Only call this in READY state. On startup the WebHook instance might not be available yet
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->RegisterHook('/hook/Luftdaten');
         }
     }
 
-    public function GetConfigurationForm()
-    {
-        $formElements = [];
-        $formElements[] = ['type' => 'Label', 'caption' => 'receive data from local sensor-station'];
-        $formElements[] = ['type' => 'Label', 'caption' => 'installed sensors (see config-page of sensor-station)'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_sds', 'caption' => ' ... SDS011'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_dht22', 'caption' => ' ... DHT22'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_htu21d', 'caption' => ' ... HTU21D'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ppd', 'caption' => ' ... PPD42NS'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bmp180', 'caption' => ' ... BMP180'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bmp280', 'caption' => ' ... BMP280'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_bme280', 'caption' => ' ... BME280'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'];
-
-        $formActions = [];
-
-        $formStatus = [];
-        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
-        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
-
-        $formStatus[] = ['code' => IS_NOSENSOR, 'icon' => 'error', 'caption' => 'Instance is inactive (no sensor)'];
-
-        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-    }
-
-    // Inspired from module SymconTest/HookServe
     protected function ProcessHookData()
     {
         $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
@@ -116,5 +81,80 @@ class LuftdatenLocal extends IPSModule
         }
         http_response_code(404);
         die('File not found!');
+    }
+
+    public function GetConfigurationForm()
+    {
+        $formElements = $this->GetFormElements();
+        $formActions = $this->GetFormActions();
+        $formStatus = $this->GetFormStatus();
+
+        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        if ($form == '') {
+            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
+            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
+        }
+        return $form;
+    }
+
+    private function GetFormElements()
+    {
+        $formElements = [];
+
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'receive data from local sensor-station'
+        ];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'installed sensors (see config-page of sensor-station)'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_sds', 'caption' => ' ... SDS011'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_dht22', 'caption' => ' ... DHT22'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_htu21d', 'caption' => ' ... HTU21D'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_ppd', 'caption' => ' ... PPD42NS'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bmp180', 'caption' => ' ... BMP180'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bmp280', 'caption' => ' ... BMP280'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bme280', 'caption' => ' ... BME280'
+        ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'
+        ];
+
+        return $formElements;
+    }
+
+    private function GetFormActions()
+    {
+        $formActions = [];
+
+        return $formActions;
     }
 }
