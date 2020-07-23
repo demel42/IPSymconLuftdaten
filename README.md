@@ -122,7 +122,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.12 @ 22.07.2020 15:40 (beta)
+- 1.12 @ 23.07.2020 09:50 (beta)
   - LICENSE.md hinzugefügt
   - define's durch statische Klassen-Variablen ersetzt
   - library.php in local.php umbenannt
