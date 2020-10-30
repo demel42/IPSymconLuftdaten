@@ -58,29 +58,31 @@ class LuftdatenLocal extends IPSModule
 
     protected function ProcessHookData()
     {
-        $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
+        if (KR_READY != IPS_GetKernelRunlevel()) {
+            $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
 
-        $root = realpath(__DIR__);
-        $uri = $_SERVER['REQUEST_URI'];
-        if (substr($uri, -1) == '/') {
+            $root = realpath(__DIR__);
+            $uri = $_SERVER['REQUEST_URI'];
+            if (substr($uri, -1) == '/') {
+                http_response_code(404);
+                die('File not found!');
+            }
+            if ($uri == '/hook/Luftdaten') {
+                $data = file_get_contents('php://input');
+                $jdata = json_decode($data, true);
+                if ($jdata == '') {
+                    echo 'malformed data: ' . $data;
+                    $this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
+                    return;
+                }
+                $this->SetValue('LastTransmission', time());
+                $sensordatavalues = $jdata['sensordatavalues'];
+                $this->decodeData($sensordatavalues, true);
+                return;
+            }
             http_response_code(404);
             die('File not found!');
         }
-        if ($uri == '/hook/Luftdaten') {
-            $data = file_get_contents('php://input');
-            $jdata = json_decode($data, true);
-            if ($jdata == '') {
-                echo 'malformed data: ' . $data;
-                $this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
-                return;
-            }
-            $this->SetValue('LastTransmission', time());
-            $sensordatavalues = $jdata['sensordatavalues'];
-            $this->decodeData($sensordatavalues, true);
-            return;
-        }
-        http_response_code(404);
-        die('File not found!');
     }
 
     public function GetConfigurationForm()
