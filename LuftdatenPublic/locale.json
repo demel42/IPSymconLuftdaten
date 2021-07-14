@@ -1,7 +1,8 @@
 {
 	"translations": {
 		"de": {
-			"Instance is disabled": "Instanz ist deaktiviert",
+			"Disable instance": "Instanz deaktivieren",
+
 			"get data from api.luftdaten.info": "Daten von api.luftdaten.info abrufen",
 
 			"Update data every X seconds": "Aktualisiere Daten alle X Sekunden",

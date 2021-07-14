@@ -82,7 +82,7 @@ class LuftdatenPublic extends IPSModule
 
         $formElements[] = [
             'type' => 'CheckBox',
-            'name' => 'module_disable', 'caption' => 'Instance is disabled'
+            'name' => 'module_disable', 'caption' => 'Disable instance'
         ];
         $formElements[] = [
             'type'    => 'Label',
