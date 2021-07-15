@@ -93,7 +93,7 @@ ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die
 
 | Eigenschaft             | Typ     | Standardwert | Beschreibung |
 | :---------------------- | :------ | :----------- | :----------- |
-| Instanz ist deaktiviert | boolean | false        | Instanz temporär deaktivieren |
+| Instanz deaktivieren    | boolean | false        | Instanz temporär deaktivieren |
 |                         |         |              | |
 | Sensor-ID               | string  |              | Sensor-ID |
 | Aktualisiere Daten ...  | integer | 60           | Aktualisierungsintervall, Angabe in Sekunden |
