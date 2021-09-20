@@ -264,7 +264,7 @@ trait LuftdatenLocalLib
         $this->CreateVarProfile('Luftdaten.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
         $this->CreateVarProfile('Luftdaten.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
         $this->CreateVarProfile('Luftdaten.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Luftdaten.Noise', VARIABLETYPE_FLOAT, ' dB(A)', 0, 0, 0, 0, 'Speaker');
+        $this->CreateVarProfile('Luftdaten.Noise', VARIABLETYPE_FLOAT, ' dB(A)', 0, 0, 0, 1, 'Speaker');
         $this->CreateVarProfile('Luftdaten.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
     }
 
