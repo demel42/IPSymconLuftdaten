@@ -39,6 +39,7 @@ trait LuftdatenLocalLib
         $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
         $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
         $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
+        $sensor_dnms = $this->ReadPropertyBoolean('sensor_dnms');
 
         $sensors = [];
         if ($sensor_sds) {
@@ -68,6 +69,9 @@ trait LuftdatenLocalLib
         if ($sensor_ds18b20) {
             $sensors[] = 'DS18B20';
         }
+        if ($sensor_dnms) {
+            $sensors[] = 'DNMS (Laerm)';
+        }
 
         return $sensors;
     }
@@ -88,6 +92,7 @@ trait LuftdatenLocalLib
             $sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
             $sensor_map['DS18B20'] = ['DS18B20_temperature'];
             $sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
+            $sensor_map['DNMS'] = ['noise_LAeq', 'noise_LA_min', 'noise_LA_max'];
         } else {
             // Daten von api.luftdate.info
             $sensor_map['SDS011'] = ['P1', 'P2'];
@@ -100,6 +105,7 @@ trait LuftdatenLocalLib
             $sensor_map['BME280'] = ['temperature', 'pressure', 'pressure_at_sealevel', 'humidity'];
             $sensor_map['DS18B20'] = ['temperature'];
             $sensor_map['GPS (NEO 6M)'] = [];
+            $sensor_map['DNMS'] = ['noise_LAeq', 'noise_LA_min', 'noise_LA_max'];
         }
 
         $sensor_sds = $this->ReadPropertyBoolean('sensor_sds');
@@ -111,6 +117,7 @@ trait LuftdatenLocalLib
         $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
         $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
         $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
+        $sensor_dnms = $this->ReadPropertyBoolean('sensor_dnms');
 
         $idents = [];
         if ($sensor_sds) {
@@ -139,6 +146,9 @@ trait LuftdatenLocalLib
         }
         if ($sensor_ds18b20) {
             $idents = array_merge($idents, $sensor_map['DS18B20']);
+        }
+        if ($sensor_dnms) {
+            $idents = array_merge($idents, $sensor_map['DNMS']);
         }
 
         // Lokale Installation mit Wifi-Stärke
@@ -172,7 +182,12 @@ trait LuftdatenLocalLib
         $ident_map['BME280_humidity'] = ['name' => 'humidity', 'datatype' => 'humidity'];
         $ident_map['BME280_pressure'] = ['name' => 'pressure', 'datatype' => 'pressure'];
 
+        $ident_map['noise_LAeq'] = ['name' => 'noise', 'datatype' => 'noise'];
+        $ident_map['noise_LA_min'] = ['name' => 'noise min', 'datatype' => 'noise'];
+        $ident_map['noise_LA_max'] = ['name' => 'noise max', 'datatype' => 'noise'];
+
         $ident_map['signal'] = ['name' => 'wifi-signal', 'datatype' => 'signal'];
+
         // ignorieren
         $ident_map['samples'] = [];
         $ident_map['min_micro'] = [];
@@ -192,6 +207,7 @@ trait LuftdatenLocalLib
         $sensor_bmp280 = $this->ReadPropertyBoolean('sensor_bmp280');
         $sensor_bme280 = $this->ReadPropertyBoolean('sensor_bme280');
         $sensor_ds18b20 = $this->ReadPropertyBoolean('sensor_ds18b20');
+        $sensor_dnms = $this->ReadPropertyBoolean('sensor_dnms');
 
         $ident_map = $this->getIdentMap();
         $idents = $this->getIdents($isLocal);
@@ -222,6 +238,9 @@ trait LuftdatenLocalLib
                 case 'pressure':
                     $this->MaintainVariable($ident, $this->Translate($name), VARIABLETYPE_FLOAT, 'Luftdaten.Pressure', $vpos++, $use);
                     break;
+                case 'noise':
+                    $this->MaintainVariable($ident, $this->Translate($name), VARIABLETYPE_FLOAT, 'Luftdaten.Noise', $vpos++, $use);
+                    break;
                 default:
                     break;
             }
@@ -239,11 +258,13 @@ trait LuftdatenLocalLib
         $this->RegisterPropertyBoolean('sensor_bmp280', false);
         $this->RegisterPropertyBoolean('sensor_bme280', false);
         $this->RegisterPropertyBoolean('sensor_ds18b20', false);
+        $this->RegisterPropertyBoolean('sensor_dnms', false);
 
         $this->CreateVarProfile('Luftdaten.PM', VARIABLETYPE_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
         $this->CreateVarProfile('Luftdaten.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
         $this->CreateVarProfile('Luftdaten.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
         $this->CreateVarProfile('Luftdaten.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
+        $this->CreateVarProfile('Luftdaten.Noise', VARIABLETYPE_FLOAT, ' dB(A)', 0, 0, 0, 0, 'Speaker');
         $this->CreateVarProfile('Luftdaten.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
     }
 
@@ -273,6 +294,7 @@ trait LuftdatenLocalLib
                 case 'pm':
                 case 'temperature':
                 case 'humidity':
+                case 'noise':
                     if (!floatval($value)) {
                         $value = 0;
                     }

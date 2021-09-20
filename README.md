@@ -122,6 +122,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.14 @ 20.09.2021 15:07 (beta)
+  - Lärm-Sensor (DNMS) hinzugefügt
+
 - 1.13 @ 14.07.2021 18:40
   - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt
   - Schalter "Instanz ist deaktiviert" umbenannt in "Instanz deaktivieren"

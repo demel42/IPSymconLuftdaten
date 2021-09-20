@@ -147,6 +147,10 @@ class LuftdatenLocal extends IPSModule
             'type' => 'CheckBox',
             'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'
         ];
+        $formElements[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_dnms', 'caption' => ' ... DNMS'
+        ];
 
         return $formElements;
     }

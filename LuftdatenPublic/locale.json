@@ -19,6 +19,9 @@
 			"pressure": "Luftdruck",
 			"absolute pressure": "absoluter Luftdruck",
 			"humidity": "Luftfeuchtigkeit",
+			"noise": "Lärm",
+			"noise min": "Lärm (Minumum)",
+			"noise max": "Lärm (Maximum)",
 			"wifi-signal": "Wifi-Signal",
 
 			"Instance getting created": "Instanz wird erstellt",

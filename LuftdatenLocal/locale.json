@@ -8,6 +8,9 @@
 			"temperature": "Temperatur",
 			"pressure": "Luftdruck",
 			"humidity": "Luftfeuchtigkeit",
+			"noise": "Lärm",
+			"noise min": "Lärm (Minumum)",
+			"noise max": "Lärm (Maximum)",
 			"wifi-signal": "Wifi-Signal",
 
 			"Module description": "Modulbeschreibung",
