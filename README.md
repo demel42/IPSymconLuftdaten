@@ -26,6 +26,8 @@ Eine lokale Sensor-Station kann man auf grundsätzlich auf zwei Arten einbinden
  - push per http-post: die Station kann die Daten nicht nur an die o.g. API's übergeben sondern auch zusätzlich an eine lokale API.<br>
    Diese Variante ist hier per WebHook realisiert.
 
+Hinweis: aus _Luftdaten.info_ wird _Sensor.community_ - wenn sich etwas relevantes ändert wird das Modul laufend adaptiert, wenn der Prozess abgeschlossen ist, wird die Dokumentation angepasst.
+
 ## 2. Voraussetzungen
 
  - IP-Symcon ab Version 5.3<br>
@@ -122,7 +124,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.14 @ 20.09.2021 15:07 (beta)
+- 1.14 @ 24.09.2021 18:01 (beta)
   - Lärmsensor (DNMS) hinzugefügt
 
 - 1.13 @ 14.07.2021 18:40

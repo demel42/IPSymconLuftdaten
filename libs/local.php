@@ -163,6 +163,7 @@ trait LuftdatenLocalLib
     {
         // Werte-Tabelle mit Bezeichnung und Datentyp
         $ident_map = [];
+
         // Werte übernehmen
         $ident_map['P0'] = ['name' => 'PM1', 'datatype' => 'pm'];
         $ident_map['P1'] = ['name' => 'PM10', 'datatype' => 'pm'];
@@ -185,6 +186,9 @@ trait LuftdatenLocalLib
         $ident_map['noise_LAeq'] = ['name' => 'noise', 'datatype' => 'noise'];
         $ident_map['noise_LA_min'] = ['name' => 'noise min', 'datatype' => 'noise'];
         $ident_map['noise_LA_max'] = ['name' => 'noise max', 'datatype' => 'noise'];
+        $ident_map['DNMS_noise_LAeq'] = ['name' => 'noise', 'datatype' => 'noise'];
+        $ident_map['DNMS_noise_LA_min'] = ['name' => 'noise min', 'datatype' => 'noise'];
+        $ident_map['DNMS_noise_LA_max'] = ['name' => 'noise max', 'datatype' => 'noise'];
 
         $ident_map['signal'] = ['name' => 'wifi-signal', 'datatype' => 'signal'];
 

@@ -2,9 +2,10 @@
 	"id": "{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}",
 	"name": "LuftdatenLocal",
 	"type": 3,
-	"vendor": "Luftdaten.info",
+	"vendor": "",
 	"aliases": [
-		"lokale Sensor-Station"
+		"Luftdaten.info - lokale Station",
+		"Sensor.community - lokale Station"
 	],
 	"parentRequirements": [],
 	"childRequirements": [],
