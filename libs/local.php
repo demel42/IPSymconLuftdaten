@@ -20,6 +20,7 @@ trait LuftdatenLocalLib
         $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
         $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
 
+        $formStatus[] = ['code' => self::$IS_NOSENSOR, 'icon' => 'error', 'caption' => 'Instance is inactive (no sensor)'];
         $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
         $formStatus[] = ['code' => self::$IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
         $formStatus[] = ['code' => self::$IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
@@ -92,7 +93,7 @@ trait LuftdatenLocalLib
             $sensor_map['BME280'] = ['BME280_temperature', 'BME280_pressure', 'BME280_humidity'];
             $sensor_map['DS18B20'] = ['DS18B20_temperature'];
             $sensor_map['GPS (NEO 6M)'] = []; // 'GPS_lat', 'GPS_lon', 'GPS_height', 'GPS_date', 'GPS_time'
-            $sensor_map['DNMS'] = ['noise_LAeq', 'noise_LA_min', 'noise_LA_max'];
+            $sensor_map['DNMS'] = ['DNMS_noise_LAeq', 'DNMS_noise_LA_min', 'DNMS_noise_LA_max'];
         } else {
             // Daten von api.luftdate.info
             $sensor_map['SDS011'] = ['P1', 'P2'];

@@ -58,7 +58,7 @@ class LuftdatenLocal extends IPSModule
 
     protected function ProcessHookData()
     {
-        $this->SendDebug('WebHook SERVER', print_r($_SERVER, true), 0);
+        $this->SendDebug(__FUNCTION__, print_r($_SERVER, true), 0);
 
         $root = realpath(__DIR__);
         $uri = $_SERVER['REQUEST_URI'];
@@ -68,6 +68,8 @@ class LuftdatenLocal extends IPSModule
         }
         if ($uri == '/hook/Luftdaten') {
             $data = file_get_contents('php://input');
+            $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
+
             $jdata = json_decode($data, true);
             if ($jdata == '') {
                 echo 'malformed data: ' . $data;
