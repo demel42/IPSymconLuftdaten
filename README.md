@@ -124,7 +124,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.14 @ 24.09.2021 18:01
+- 1.14 @ 25.09.2021 09:11
   - Lärmsensor (DNMS) hinzugefügt
 
 - 1.13 @ 14.07.2021 18:40
