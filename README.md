@@ -124,6 +124,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.15 @ 29.12.2021 17:38
+  - API-URL hat sich geändert
+  - Anzeige der Modul/Bibliotheks-Informationen
+
 - 1.14 @ 25.09.2021 09:11
   - Lärmsensor (DNMS) hinzugefügt
 

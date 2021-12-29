@@ -60,22 +60,6 @@ class LuftdatenPublic extends IPSModule
         $this->SetUpdateInterval();
     }
 
-    public function GetConfigurationForm()
-    {
-        $formElements = $this->GetFormElements();
-        $formActions = $this->GetFormActions();
-        $formStatus = $this->GetFormStatus();
-
-        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-        if ($form == '') {
-            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
-            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
-        }
-        return $form;
-    }
-
     private function GetFormElements()
     {
         $formElements = [];
@@ -161,6 +145,17 @@ class LuftdatenPublic extends IPSModule
             'caption' => 'Update Data', 'onClick' => 'LuftdatenPublic_UpdateData($id);'
         ];
 
+        $formActions[] = [
+            'type'    => 'ExpansionPanel',
+            'caption' => 'Information',
+            'items'   => [
+                [
+                    'type'    => 'Label',
+                    'caption' => $this->InstanceInfo($this->InstanceID),
+                ],
+            ],
+        ];
+
         return $formActions;
     }
 
@@ -174,7 +169,7 @@ class LuftdatenPublic extends IPSModule
         }
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
-        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
+        $url = 'https://data.sensor.community/airrohr/v1/sensor/' . $sensor_id . '/';
 
         $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {
@@ -207,14 +202,13 @@ class LuftdatenPublic extends IPSModule
 
     public function UpdateData()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
-            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
             return;
         }
 
         $sensor_id = $this->ReadPropertyString('sensor_id');
-        $url = 'http://api.luftdaten.info/v1/sensor/' . $sensor_id . '/';
+        $url = 'https://data.sensor.community/airrohr/v1/sensor/' . $sensor_id . '/';
 
         $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {

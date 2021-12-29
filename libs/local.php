@@ -11,6 +11,10 @@ trait LuftdatenLocalLib
     public static $IS_PAGENOTFOUND = IS_EBASE + 5;
     public static $IS_INVALIDDATA = IS_EBASE + 6;
 
+    public static $STATUS_INVALID = 0;
+    public static $STATUS_VALID = 1;
+    public static $STATUS_RETRYABLE = 2;
+
     private function GetFormStatus()
     {
         $formStatus = [];
@@ -27,6 +31,20 @@ trait LuftdatenLocalLib
         $formStatus[] = ['code' => self::$IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
         $formStatus[] = ['code' => self::$IS_PAGENOTFOUND, 'icon' => 'error', 'caption' => 'Instance is inactive (page not found)'];
         return $formStatus;
+    }
+
+    private function CheckStatus()
+    {
+        switch ($this->GetStatus()) {
+            case IS_ACTIVE:
+                $class = self::$STATUS_VALID;
+                break;
+            default:
+                $class = self::$STATUS_INVALID;
+                break;
+        }
+
+        return $class;
     }
 
     private function getSensors()
