@@ -39,6 +39,11 @@ trait LuftdatenLocalLib
             case IS_ACTIVE:
                 $class = self::$STATUS_VALID;
                 break;
+            case self::$IS_SERVERERROR:
+            case self::$IS_HTTPERROR:
+            case self::$IS_INVALIDDATA:
+                $class = self::$STATUS_RETRYABLE;
+                break;
             default:
                 $class = self::$STATUS_INVALID;
                 break;

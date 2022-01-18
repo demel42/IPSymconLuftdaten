@@ -3,7 +3,7 @@
 		"de": {
 			"Disable instance": "Instanz deaktivieren",
 
-			"get data from api.luftdaten.info": "Daten von api.luftdaten.info abrufen",
+			"get data from data.sensor.community": "Daten von data.sensor.community abrufen",
 
 			"Update data every X seconds": "Aktualisiere Daten alle X Sekunden",
 			"Seconds": "Sekunden",

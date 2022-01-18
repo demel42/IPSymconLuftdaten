@@ -70,7 +70,7 @@ class LuftdatenPublic extends IPSModule
         ];
         $formElements[] = [
             'type'    => 'Label',
-            'caption' => 'get data from api.luftdaten.info'
+            'caption' => 'get data from data.sensor.community'
         ];
         $formElements[] = [
             'type' => 'ValidationTextBox',
@@ -84,50 +84,52 @@ class LuftdatenPublic extends IPSModule
             'type' => 'NumberSpinner',
             'name' => 'update_interval', 'caption' => 'Seconds'
         ];
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'Sensor'
-        ];
-        $formElements[] = [
+		$items = [];
+        $items[] = [
             'type' => 'CheckBox',
-            'name' => 'sensor_sds', 'caption' => ' ... SDS011'
+            'name' => 'sensor_sds', 'caption' => 'SDS011'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_pms', 'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_dht22', 'caption' => 'DHT22'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_htu21d', 'caption' => 'HTU21D'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_ppd', 'caption' => 'PPD42NS'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bmp180', 'caption' => 'BMP180'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bmp280', 'caption' => 'BMP280'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_bme280', 'caption' => 'BME280'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_ds18b20', 'caption' => 'DS18B20'
+        ];
+        $items[] = [
+            'type' => 'CheckBox',
+            'name' => 'sensor_dnms', 'caption' => 'DNMS'
         ];
         $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dht22', 'caption' => ' ... DHT22'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_htu21d', 'caption' => ' ... HTU21D'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ppd', 'caption' => ' ... PPD42NS'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp180', 'caption' => ' ... BMP180'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp280', 'caption' => ' ... BMP280'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bme280', 'caption' => ' ... BME280'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dnms', 'caption' => ' ... DNMS'
-        ];
+            'type'    => 'ExpansionPanel',
+            'caption' => 'Sensor',
+            'items'   => $items,
+		];
 
         return $formElements;
     }
@@ -161,8 +163,7 @@ class LuftdatenPublic extends IPSModule
 
     public function VerifyConfiguration()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+        if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             echo $this->translate('Instance is inactive') . PHP_EOL;
             return;

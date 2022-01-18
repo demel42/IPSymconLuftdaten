@@ -124,6 +124,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.15.1 @ 06.01.2022 16:37
+  - automatischer Retry nach HTTP-Server-Error
+
 - 1.15 @ 29.12.2021 17:38
   - API-URL hat sich geändert
   - Anzeige der Modul/Bibliotheks-Informationen
