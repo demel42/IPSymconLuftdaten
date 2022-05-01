@@ -224,4 +224,16 @@ class LuftdatenLocal extends IPSModule
 
         return $formActions;
     }
+
+    public function RequestAction($ident, $value)
+    {
+        if ($this->CommonRequestAction($ident, $value)) {
+            return;
+        }
+        switch ($ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
+                break;
+        }
+    }
 }
