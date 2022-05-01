@@ -4,34 +4,28 @@ declare(strict_types=1);
 
 trait LuftdatenLocalLib
 {
-    public static $IS_NOSENSOR = IS_EBASE + 1;
-    public static $IS_INVALIDCONFIG = IS_EBASE + 2;
-    public static $IS_SERVERERROR = IS_EBASE + 3;
-    public static $IS_HTTPERROR = IS_EBASE + 4;
-    public static $IS_PAGENOTFOUND = IS_EBASE + 5;
-    public static $IS_INVALIDDATA = IS_EBASE + 6;
+    public static $IS_NOSENSOR = IS_EBASE + 10;
+    public static $IS_SERVERERROR = IS_EBASE + 11;
+    public static $IS_HTTPERROR = IS_EBASE + 12;
+    public static $IS_PAGENOTFOUND = IS_EBASE + 13;
+    public static $IS_INVALIDDATA = IS_EBASE + 14;
+
+    private function GetFormStatus()
+    {
+        $formStatus = $this->GetCommonFormStatus();
+
+        $formStatus[] = ['code' => self::$IS_NOSENSOR, 'icon' => 'error', 'caption' => 'Instance is inactive (no sensor)'];
+        $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
+        $formStatus[] = ['code' => self::$IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
+        $formStatus[] = ['code' => self::$IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
+        $formStatus[] = ['code' => self::$IS_PAGENOTFOUND, 'icon' => 'error', 'caption' => 'Instance is inactive (page not found)'];
+
+        return $formStatus;
+    }
 
     public static $STATUS_INVALID = 0;
     public static $STATUS_VALID = 1;
     public static $STATUS_RETRYABLE = 2;
-
-    private function GetFormStatus()
-    {
-        $formStatus = [];
-        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
-        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
-
-        $formStatus[] = ['code' => self::$IS_NOSENSOR, 'icon' => 'error', 'caption' => 'Instance is inactive (no sensor)'];
-        $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
-        $formStatus[] = ['code' => self::$IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
-        $formStatus[] = ['code' => self::$IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
-        $formStatus[] = ['code' => self::$IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
-        $formStatus[] = ['code' => self::$IS_PAGENOTFOUND, 'icon' => 'error', 'caption' => 'Instance is inactive (page not found)'];
-        return $formStatus;
-    }
 
     private function CheckStatus()
     {
@@ -50,6 +44,21 @@ trait LuftdatenLocalLib
         }
 
         return $class;
+    }
+
+    public function InstallVarProfiles(bool $reInstall = false)
+    {
+        if ($reInstall) {
+            $this->SendDebug(__FUNCTION__, 'reInstall=' . $this->bool2str($reInstall), 0);
+        }
+
+        $this->CreateVarProfile('Luftdaten.PM', VARIABLETYPE_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow', [], $reInstall);
+        $this->CreateVarProfile('Luftdaten.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Luftdaten.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Luftdaten.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge', [], $reInstall);
+        $this->CreateVarProfile('Luftdaten.Noise', VARIABLETYPE_FLOAT, ' dB(A)', 0, 0, 0, 1, 'Speaker', [], $reInstall);
+
+        $this->CreateVarProfile('Luftdaten.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity', [], $reInstall);
     }
 
     private function getSensors()
@@ -287,13 +296,6 @@ trait LuftdatenLocalLib
         $this->RegisterPropertyBoolean('sensor_bme280', false);
         $this->RegisterPropertyBoolean('sensor_ds18b20', false);
         $this->RegisterPropertyBoolean('sensor_dnms', false);
-
-        $this->CreateVarProfile('Luftdaten.PM', VARIABLETYPE_FLOAT, ' µg/m³', 0, 0, 0, 1, 'Snow');
-        $this->CreateVarProfile('Luftdaten.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Luftdaten.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Luftdaten.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Luftdaten.Noise', VARIABLETYPE_FLOAT, ' dB(A)', 0, 0, 0, 1, 'Speaker');
-        $this->CreateVarProfile('Luftdaten.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
     }
 
     private function decodeData($sensordatavalues, $isLocal)

@@ -2,13 +2,22 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class LuftdatenPublic extends IPSModule
 {
-    use LuftdatenCommonLib;
+    use Luftdaten\StubsCommonLib;
     use LuftdatenLocalLib;
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
@@ -21,12 +30,57 @@ class LuftdatenPublic extends IPSModule
 
         $this->createGlobals();
 
-        $this->RegisterTimer('UpdateData', 0, 'LuftdatenPublic_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterAttributeString('UpdateInfo', '');
+
+        $this->InstallVarProfiles(false);
+
+        $this->RegisterTimer('UpdateData', 0, $this->GetModulePrefix() . '_UpdateData(' . $this->InstanceID . ');');
+
+        $this->RegisterMessage(0, IPS_KERNELMESSAGE);
+    }
+
+    private function CheckModuleConfiguration()
+    {
+        $r = [];
+
+        $sensor_id = $this->ReadPropertyString('sensor_id');
+        if ($sensor_id == '') {
+            $this->SendDebug(__FUNCTION__, '"$sensor_id" is needed', 0);
+            $r[] = $this->Translate('Sensor-ID is missing');
+        }
+
+        $sensors = $this->getSensors();
+        if ($sensors == []) {
+            $this->SendDebug(__FUNCTION__, 'no sensorѕ defined', 0);
+            $r[] = $this->Translate('no sensors defined');
+        }
+
+        return $r;
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
+
+        $this->MaintainReferences();
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
 
         $this->maintainVariables(false);
 
@@ -38,98 +92,112 @@ class LuftdatenPublic extends IPSModule
         }
         $this->SetSummary($info);
 
-        $ok = true;
-
-        $sensor_id = $this->ReadPropertyString('sensor_id');
-        if ($sensor_id == '') {
-            $ok = false;
-        }
-
-        if ($sensors == []) {
-            $ok = false;
-        }
-
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
 
-        $this->SetStatus($ok ? IS_ACTIVE : self::$IS_INVALIDCONFIG);
-        $this->SetUpdateInterval();
+        $this->SetStatus(IS_ACTIVE);
+
+        if (IPS_GetKernelRunlevel() == KR_READY) {
+            $this->SetUpdateInterval();
+        }
+    }
+
+    public function MessageSink($timestamp, $senderID, $message, $data)
+    {
+        parent::MessageSink($timestamp, $senderID, $message, $data);
+
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
+            $this->SetUpdateInterval();
+        }
     }
 
     private function GetFormElements()
     {
-        $formElements = [];
+        $formElements = $this->GetCommonFormElements('get data from data.sensor.community');
+
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
+        }
 
         $formElements[] = [
             'type' => 'CheckBox',
             'name' => 'module_disable', 'caption' => 'Disable instance'
         ];
+
         $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'get data from data.sensor.community'
+            'type'    => 'ValidationTextBox',
+            'name'    => 'sensor_id',
+            'caption' => 'Sensor-ID'
         ];
+
         $formElements[] = [
-            'type' => 'ValidationTextBox',
-            'name' => 'sensor_id', 'caption' => 'Sensor-ID'
+            'type'    => 'NumberSpinner',
+            'suffix'  => 'Seconds',
+            'minimum' => 0,
+            'name'    => 'update_interval',
+            'caption' => 'Update interval'
         ];
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'Update data every X seconds'
-        ];
-        $formElements[] = [
-            'type' => 'NumberSpinner',
-            'name' => 'update_interval', 'caption' => 'Seconds'
-        ];
-		$items = [];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_sds', 'caption' => 'SDS011'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_pms', 'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dht22', 'caption' => 'DHT22'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_htu21d', 'caption' => 'HTU21D'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ppd', 'caption' => 'PPD42NS'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp180', 'caption' => 'BMP180'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp280', 'caption' => 'BMP280'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bme280', 'caption' => 'BME280'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ds18b20', 'caption' => 'DS18B20'
-        ];
-        $items[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dnms', 'caption' => 'DNMS'
-        ];
+
         $formElements[] = [
             'type'    => 'ExpansionPanel',
+            'items'   => [
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_sds',
+                    'caption' => 'SDS011'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_pms',
+                    'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_dht22',
+                    'caption' => 'DHT22'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_htu21d',
+                    'caption' => 'HTU21D'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_ppd',
+                    'caption' => 'PPD42NS'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bmp180',
+                    'caption' => 'BMP180'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bmp280',
+                    'caption' => 'BMP280'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bme280',
+                    'caption' => 'BME280'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_ds18b20',
+                    'caption' => 'DS18B20'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_dnms',
+                    'caption' => 'DNMS'
+                ],
+            ],
             'caption' => 'Sensor',
-            'items'   => $items,
-		];
+        ];
 
         return $formElements;
     }
@@ -138,25 +206,28 @@ class LuftdatenPublic extends IPSModule
     {
         $formActions = [];
 
-        $formActions[] = [
-            'type'    => 'Button',
-            'caption' => 'Verify Configuration', 'onClick' => 'LuftdatenPublic_VerifyConfiguration($id);'
-        ];
-        $formActions[] = [
-            'type'    => 'Button',
-            'caption' => 'Update Data', 'onClick' => 'LuftdatenPublic_UpdateData($id);'
-        ];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
 
         $formActions[] = [
-            'type'    => 'ExpansionPanel',
-            'caption' => 'Information',
-            'items'   => [
-                [
-                    'type'    => 'Label',
-                    'caption' => $this->InstanceInfo($this->InstanceID),
-                ],
-            ],
+            'type'    => 'Button',
+            'caption' => 'Verify Configuration',
+            'onClick' => $this->GetModulePrefix() . '_VerifyConfiguration($id);'
         ];
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Update Data',
+            'onClick' => $this->GetModulePrefix() . '_UpdateData($id);'
+        ];
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
 
         return $formActions;
     }
@@ -165,7 +236,7 @@ class LuftdatenPublic extends IPSModule
     {
         if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
-            echo $this->translate('Instance is inactive') . PHP_EOL;
+            echo $this->Translate('Instance is inactive') . PHP_EOL;
             return;
         }
 
@@ -198,7 +269,7 @@ class LuftdatenPublic extends IPSModule
     {
         $sec = $this->ReadPropertyInteger('update_interval');
         $msec = $sec > 0 ? $sec * 1000 : 0;
-        $this->SetTimerInterval('UpdateData', $msec);
+        $this->MaintainTimer('UpdateData', $msec);
     }
 
     public function UpdateData()

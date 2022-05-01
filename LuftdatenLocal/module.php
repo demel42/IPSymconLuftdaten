@@ -2,13 +2,22 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class LuftdatenLocal extends IPSModule
 {
-    use LuftdatenCommonLib;
+    use Luftdaten\StubsCommonLib;
     use LuftdatenLocalLib;
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
@@ -16,21 +25,60 @@ class LuftdatenLocal extends IPSModule
 
         $this->createGlobals();
 
+        $this->RegisterPropertyString('hook', '/hook/Luftdaten');
+
+        $this->RegisterAttributeString('UpdateInfo', '');
+
+        $this->InstallVarProfiles(false);
+
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    private function CheckModuleConfiguration()
     {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        $r = [];
 
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
-            $this->RegisterHook('/hook/Luftdaten');
+        $hook = $this->ReadPropertyString('hook');
+        if ($hook != '' && $this->HookIsUsed($hook)) {
+            $this->SendDebug(__FUNCTION__, '"hook" is already used', 0);
+            $r[] = $this->Translate('Webhook is already used');
+        }
+
+        return $r;
+    }
+
+    public function MessageSink($timestamp, $senderID, $message, $data)
+    {
+        parent::MessageSink($timestamp, $senderID, $message, $data);
+
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
+            $hook = $this->ReadPropertyString('hook');
+            if ($hook != '') {
+                $this->RegisterHook($hook);
+            }
         }
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
+
+        $this->MaintainReferences();
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
 
         $this->maintainVariables(true);
 
@@ -39,20 +87,21 @@ class LuftdatenLocal extends IPSModule
         if ($sensors != []) {
             $info .= ' (' . implode(',', $sensors) . ')';
         }
-
         $this->SetSummary($info);
-
-        $statuscode = IS_ACTIVE;
 
         $sensors = $this->getSensors();
         if ($sensors == []) {
-            $statuscode = self::$IS_NOSENSOR;
+            $this->SetStatus(self::$IS_NOSENSOR);
+            return;
         }
 
-        $this->SetStatus($statuscode);
+        $this->SetStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
-            $this->RegisterHook('/hook/Luftdaten');
+            $hook = $this->ReadPropertyString('hook');
+            if ($hook != '') {
+                $this->RegisterHook($hook);
+            }
         }
     }
 
@@ -66,7 +115,7 @@ class LuftdatenLocal extends IPSModule
             http_response_code(404);
             die('File not found!');
         }
-        if ($uri == '/hook/Luftdaten') {
+        if ($uri == $this->ReadPropertyString('hook')) {
             $data = file_get_contents('php://input');
             $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
 
@@ -87,57 +136,68 @@ class LuftdatenLocal extends IPSModule
 
     private function GetFormElements()
     {
-        $formElements = [];
+        $formElements = $this->GetCommonFormElements('receive data from local sensor-station');
+
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
+        }
 
         $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'receive data from local sensor-station'
-        ];
-        $formElements[] = [
-            'type'    => 'Label',
+            'type'    => 'ExpansionPanel',
+            'items'   => [
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_sds',
+                    'caption' => 'SDS011'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_pms',
+                    'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_dht22',
+                    'caption' => 'DHT22'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_htu21d',
+                    'caption' => 'HTU21D'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_ppd',
+                    'caption' => 'PPD42NS'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bmp180',
+                    'caption' => 'BMP180'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bmp280',
+                    'caption' => 'BMP280'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_bme280',
+                    'caption' => 'BME280'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_ds18b20',
+                    'caption' => 'DS18B20'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'sensor_dnms',
+                    'caption' => 'DNMS'
+                ],
+            ],
             'caption' => 'installed sensors (see config-page of sensor-station)'
         ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_sds', 'caption' => ' ... SDS011'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_pms', 'caption' => ' ... PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dht22', 'caption' => ' ... DHT22'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_htu21d', 'caption' => ' ... HTU21D'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ppd', 'caption' => ' ... PPD42NS'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp180', 'caption' => ' ... BMP180'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bmp280', 'caption' => ' ... BMP280'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_bme280', 'caption' => ' ... BME280'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_ds18b20', 'caption' => ' ... DS18B20'
-        ];
-        $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'sensor_dnms', 'caption' => ' ... DNMS'
-        ];
-
         return $formElements;
     }
 
@@ -145,16 +205,17 @@ class LuftdatenLocal extends IPSModule
     {
         $formActions = [];
 
-        $formActions[] = [
-            'type'    => 'ExpansionPanel',
-            'caption' => 'Information',
-            'items'   => [
-                [
-                    'type'    => 'Label',
-                    'caption' => $this->InstanceInfo($this->InstanceID),
-                ],
-            ],
-        ];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
 
         return $formActions;
     }

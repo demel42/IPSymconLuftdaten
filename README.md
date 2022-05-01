@@ -124,6 +124,13 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.16 @ 01.05.2022 12:14
+  - IPS-Version ist nun minimal 6.0
+  - Anzeige der Modul/Bibliotheks-Informationen, Referenzen und Timer
+  - Implememtierung einer Update-Logik
+  - Überlagerung von Translate und Aufteilung von locale.json in 3 translation.json (Modul, libs und CommonStubs)
+  - diverse interne Änderungen
+
 - 1.15.1 @ 06.01.2022 16:37
   - automatischer Retry nach HTTP-Server-Error
 

@@ -1,0 +1,25 @@
+{
+	"translations": {
+		"de": {
+			"__variables__": "",
+			"last transmission": "letzte Übertragung",
+			"temperature": "Temperatur",
+			"pressure": "Luftdruck",
+			"absolute pressure": "absoluter Luftdruck",
+			"humidity": "Luftfeuchtigkeit",
+			"noise": "Lärm",
+			"noise min": "Lärm (Minimum)",
+			"noise max": "Lärm (Maximum)",
+			"wifi-signal": "Wifi-Signal",
+
+			"__status__": "",
+			"Instance is inactive (no sensor)": "Instanz ist inaktiv (kein Sensor)",
+			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
+			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
+			"Instance is inactive (page not found)": "Instanz ist inaktiv (Seite nicht vorhanden)",
+			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
+
+			"__end__": ""
+		}
+	}
+}
