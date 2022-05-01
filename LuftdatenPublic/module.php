@@ -245,23 +245,24 @@ class LuftdatenPublic extends IPSModule
 
         $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {
+            echo $this->Translate('configuration incorrect: unknown sensor-id');
             return;
         }
 
         $sensor = $jdata[0]['sensor'];
-        $sensor_type = $sensor['sensor_type']['name'];
+        $got_sensor = $sensor['sensor_type']['name'];
 
-        $sensors = $this->getSensors();
+        $cfg_sensors = $this->getSensors();
 
-        if ($sensors == []) {
-            echo "configuration incomplete: no sensor configured, got sensor=$sensor_type";
-        } elseif (!in_array($sensor_type, $sensors)) {
-            $s = $sensors == [] ? 'none' : implode(',', $sensors);
-            echo "configuration mismatch: got sensor=$sensor_type, configured are: $s";
-        } elseif (count($sensors) > 1) {
-            echo "configuration improvable: too much sensorѕ configured, got sensor=$sensor_type";
+        if ($cfg_sensors == []) {
+            echo $this->TranslateFormat('configuration incomplete: no sensor configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
+        } elseif (!in_array($got_sensor, $cfg_sensors)) {
+            $s = $cfg_sensors == [] ? $this->Translate('none') : implode(',', $cfg_sensors);
+            echo $this->TranslateFormat('configuration mismatch: got: {$got_sensor}, configured: {$cfg_sensors}', ['{$got_sensor}' => $got_sensor, '{$cfg_sensors}' => $s]);
+        } elseif (count($cfg_sensors) > 1) {
+            echo $this->TranslateFormat('configuration improvable: too much sensorѕ configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
         } else {
-            echo "configuration ok: sensor=$sensor_type";
+            echo $this->TranslateFormat('configuration ok: sensor {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
         }
     }
 

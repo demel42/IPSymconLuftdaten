@@ -10,6 +10,9 @@
 			"noise": "Lärm",
 			"noise min": "Lärm (Minimum)",
 			"noise max": "Lärm (Maximum)",
+			"PM1": "PM1",
+			"PM2.5": "PM2.5",
+			"PM10": "PM10",
 			"wifi-signal": "Wifi-Signal",
 
 			"__status__": "",

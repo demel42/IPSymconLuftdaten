@@ -19,6 +19,19 @@
 			"Verify Configuration": "Prüfe Konfiguration",
 			"Update Data": "Aktualisiere Daten",
 
+			"__function__": "VerifyConfiguration",
+			"configuration incorrect: unknown sensor-id":
+				"Konfiguration fehlerhaft: unbekannte Sensor-ID",
+			"configuration incomplete: no sensor configured, got: {$got_sensor}":
+				"Konfiguration unvollständig: kein Sensor konfiguriert, empfangen: {$got_sensor}",
+			"configuration mismatch: got: {$got_sensor}, configured: {$cfg_sensors}":
+				"Konfiguration fehlerhaft: empfangen: {$got_sensor}, konfiguriert: {$cfg_sensors}",
+			"configuration improvable: too much sensorѕ configured, got: {$got_sensor}":
+				"Konfiguration verbesserungswürdig: zu viele Sensoren konfiguriert, empfangen: {$got_sensor}",
+			"configuration ok: sensor {$got_sensor}":
+				"Konfiguration ok: Sensor {$got_sensor}",
+			"none": "keiner",
+
 			"__end__": ""
 		}
 	}

@@ -121,13 +121,18 @@ class LuftdatenLocal extends IPSModule
 
             $jdata = json_decode($data, true);
             if ($jdata == '') {
-                echo 'malformed data: ' . $data;
+                $this->SetStatus(self::$IS_INVALIDDATA);
                 $this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
                 return;
             }
+            if (isset($jdata['sensordatavalues']) == false) {
+                $this->SetStatus(self::$IS_INVALIDDATA);
+                $this->SendDebug(__FUNCTION__, 'malformed data: ' . print_r($jdata, true), 0);
+                return;
+            }
+            $this->decodeData($jdata['sensordatavalues'], true);
             $this->SetValue('LastTransmission', time());
-            $sensordatavalues = $jdata['sensordatavalues'];
-            $this->decodeData($sensordatavalues, true);
+            $this->SetStatus(IS_ACTIVE);
             return;
         }
         http_response_code(404);
