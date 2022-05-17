@@ -124,6 +124,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.16.2 @ 17.05.2022 15:38
+  - update submodule CommonStubs
+    Fix: Absicherung gegen fehlende Objekte
+
 - 1.16.1 @ 10.05.2022 15:06
   - update submodule CommonStubs
 
