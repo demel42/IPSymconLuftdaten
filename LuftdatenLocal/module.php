@@ -66,17 +66,17 @@ class LuftdatenLocal extends IPSModule
         $this->MaintainReferences();
 
         if ($this->CheckPrerequisites() != false) {
-            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            $this->MaintainStatus(self::$IS_INVALIDPREREQUISITES);
             return;
         }
 
         if ($this->CheckUpdate() != false) {
-            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            $this->MaintainStatus(self::$IS_UPDATEUNCOMPLETED);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            $this->MaintainStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -91,11 +91,11 @@ class LuftdatenLocal extends IPSModule
 
         $sensors = $this->getSensors();
         if ($sensors == []) {
-            $this->SetStatus(self::$IS_NOSENSOR);
+            $this->MaintainStatus(self::$IS_NOSENSOR);
             return;
         }
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $hook = $this->ReadPropertyString('hook');
@@ -121,18 +121,18 @@ class LuftdatenLocal extends IPSModule
 
             $jdata = json_decode($data, true);
             if ($jdata == '') {
-                $this->SetStatus(self::$IS_INVALIDDATA);
+                $this->MaintainStatus(self::$IS_INVALIDDATA);
                 $this->SendDebug(__FUNCTION__, 'malformed data: ' . $data, 0);
                 return;
             }
             if (isset($jdata['sensordatavalues']) == false) {
-                $this->SetStatus(self::$IS_INVALIDDATA);
+                $this->MaintainStatus(self::$IS_INVALIDDATA);
                 $this->SendDebug(__FUNCTION__, 'malformed data: ' . print_r($jdata, true), 0);
                 return;
             }
             $this->decodeData($jdata['sensordatavalues'], true);
             $this->SetValue('LastTransmission', time());
-            $this->SetStatus(IS_ACTIVE);
+            $this->MaintainStatus(IS_ACTIVE);
             return;
         }
         http_response_code(404);

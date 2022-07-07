@@ -34,7 +34,7 @@ class LuftdatenPublic extends IPSModule
 
         $this->InstallVarProfiles(false);
 
-        $this->RegisterTimer('UpdateData', 0, $this->GetModulePrefix() . '_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterTimer('UpdateData', 0, 'IPS_RequestAction(' . $this->InstanceID . ', "UpdateData", "");');
 
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
@@ -66,19 +66,19 @@ class LuftdatenPublic extends IPSModule
 
         if ($this->CheckPrerequisites() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            $this->MaintainStatus(self::$IS_INVALIDPREREQUISITES);
             return;
         }
 
         if ($this->CheckUpdate() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            $this->MaintainStatus(self::$IS_UPDATEUNCOMPLETED);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            $this->MaintainStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -95,11 +95,11 @@ class LuftdatenPublic extends IPSModule
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(IS_INACTIVE);
+            $this->MaintainStatus(IS_INACTIVE);
             return;
         }
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->SetUpdateInterval();
@@ -218,12 +218,12 @@ class LuftdatenPublic extends IPSModule
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Verify Configuration',
-            'onClick' => $this->GetModulePrefix() . '_VerifyConfiguration($id);'
+            'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "VerifyConfiguration", "");',
         ];
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Update Data',
-            'onClick' => $this->GetModulePrefix() . '_UpdateData($id);'
+            'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "UpdateData", "");',
         ];
 
         $formActions[] = $this->GetInformationFormAction();
@@ -232,8 +232,28 @@ class LuftdatenPublic extends IPSModule
         return $formActions;
     }
 
+    private function LocalRequestAction($ident, $value)
+    {
+        $r = true;
+        switch ($ident) {
+            case 'VerifyConfiguration':
+                $this->VerifyConfiguration();
+                break;
+            case 'UpdateData':
+                $this->UpdateData();
+                break;
+            default:
+                $r = false;
+                break;
+        }
+        return $r;
+    }
+
     public function RequestAction($ident, $value)
     {
+        if ($this->LocalRequestAction($ident, $value)) {
+            return;
+        }
         if ($this->CommonRequestAction($ident, $value)) {
             return;
         }
@@ -244,11 +264,12 @@ class LuftdatenPublic extends IPSModule
         }
     }
 
-    public function VerifyConfiguration()
+    private function VerifyConfiguration()
     {
         if ($this->GetStatus() == IS_INACTIVE) {
-            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
-            echo $this->Translate('Instance is inactive') . PHP_EOL;
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            $msg = $this->GetStatusText();
+            $this->PopupMessage($msg);
             return;
         }
 
@@ -257,7 +278,8 @@ class LuftdatenPublic extends IPSModule
 
         $jdata = $this->do_HttpRequest($url);
         if ($jdata == '') {
-            echo $this->Translate('configuration incorrect: unknown sensor-id');
+            $msg = $this->Translate('configuration incorrect: unknown sensor-id');
+            $this->PopupMessage($msg);
             return;
         }
 
@@ -267,25 +289,26 @@ class LuftdatenPublic extends IPSModule
         $cfg_sensors = $this->getSensors();
 
         if ($cfg_sensors == []) {
-            echo $this->TranslateFormat('configuration incomplete: no sensor configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
+            $msg = $this->TranslateFormat('configuration incomplete: no sensor configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
         } elseif (!in_array($got_sensor, $cfg_sensors)) {
             $s = $cfg_sensors == [] ? $this->Translate('none') : implode(',', $cfg_sensors);
-            echo $this->TranslateFormat('configuration mismatch: got: {$got_sensor}, configured: {$cfg_sensors}', ['{$got_sensor}' => $got_sensor, '{$cfg_sensors}' => $s]);
+            $msg = $this->TranslateFormat('configuration mismatch: got: {$got_sensor}, configured: {$cfg_sensors}', ['{$got_sensor}' => $got_sensor, '{$cfg_sensors}' => $s]);
         } elseif (count($cfg_sensors) > 1) {
-            echo $this->TranslateFormat('configuration improvable: too much sensorѕ configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
+            $msg = $this->TranslateFormat('configuration improvable: too much sensorѕ configured, got: {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
         } else {
-            echo $this->TranslateFormat('configuration ok: sensor {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
+            $msg = $this->TranslateFormat('configuration ok: sensor {$got_sensor}', ['{$got_sensor}' => $got_sensor]);
         }
+        $this->PopupMessage($msg);
     }
 
-    protected function SetUpdateInterval()
+    private function SetUpdateInterval()
     {
         $sec = $this->ReadPropertyInteger('update_interval');
         $msec = $sec > 0 ? $sec * 1000 : 0;
         $this->MaintainTimer('UpdateData', $msec);
     }
 
-    public function UpdateData()
+    private function UpdateData()
     {
         if ($this->CheckStatus() == self::$STATUS_INVALID) {
             $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
@@ -316,7 +339,7 @@ class LuftdatenPublic extends IPSModule
 
         $sensordatavalues = $jdata[$idx]['sensordatavalues'];
         $this->decodeData($sensordatavalues, false);
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
     }
 
     private function do_HttpRequest($url)
@@ -373,7 +396,7 @@ class LuftdatenPublic extends IPSModule
         if ($statuscode) {
             $this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
-            $this->SetStatus($statuscode);
+            $this->MaintainStatus($statuscode);
         }
 
         return $jdata;
