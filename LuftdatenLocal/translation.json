@@ -7,6 +7,7 @@
             "Webhook is already used": "Webhook wird bereits verwendet",
 
 			"__elemets__": "",
+			"Webhook": "Webhook",
 			"installed sensors (see config-page of sensor-station)": "installierte Sensoren (siehe Konfiguration der Sensor-Station)",
 
 			"__end__": ""

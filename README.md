@@ -91,22 +91,28 @@ ruft die Daten von dem jeweiligen Sensor ab. Wird automatisch zyklisch durch die
 
 ## 5. Konfiguration:
 
-### Variablen (nur LuftdatenPublic)
+### Variablen (LuftdatenPublic)
 
-| Eigenschaft             | Typ     | Standardwert | Beschreibung |
-| :---------------------- | :------ | :----------- | :----------- |
-| Instanz deaktivieren    | boolean | false        | Instanz temporär deaktivieren |
-|                         |         |              | |
-| Sensor-ID               | string  |              | Sensor-ID |
-| Aktualisiere Daten ...  | integer | 60           | Aktualisierungsintervall, Angabe in Sekunden |
+| Eigenschaft             | Typ     | Standardwert    | Beschreibung |
+| :---------------------- | :------ | :-------------- | :----------- |
+| Instanz deaktivieren    | boolean | false           | Instanz temporär deaktivieren |
+|                         |         |                 | |
+| Aktualisiere Daten ...  | integer | 60              | Aktualisierungsintervall, Angabe in Sekunden |
+|                         |         |                 | |
+| Sensor-ID               | string  |                 | Sensor-ID |
+| Sensor                  | boolean |                 | aktivieren des Typs mit der o.g. Sensor-ID verknüpften Sensors |
 
 Anmerkung: die Ermittlung der Messwerte wird in der jeweiligen Messstation eingetragen; der Standarwert sind 150s. Um also alle Messungen mitzubekommen muss man ein kürzeres Intervall wählen (daher 60s).
 
-### Variablen (alle)
+### Variablen (LuftdatenLocal)
 
-Die Bezeichnung der Sensoren entsprechen den in dem Projekt _Luftdaten.info_ verwendeten Bezeichnungen.
+| Eigenschaft             | Typ     | Standardwert    | Beschreibung |
+| :---------------------- | :------ | :-------------- | :----------- |
+| Webhook                 | string  | /hook/Luftdaten | Bezeichnung des Webhook, anzupassen wenn mehr als eine Instanz im Einsatz ist |
+|                         |         |                 | |
+| installierte Sensoren   | boolean |                 | aktivieren der Typen der verbauten Sensoren |
 
-### Schaltflächen
+### Schaltflächen (LuftdatenPublic)
 
 | Bezeichnung         | Beschreibung |
 | :------------------ | :----------- |
@@ -123,6 +129,10 @@ GUIDs
   - LuftdatenLocal: `{7BE33479-C99A-4706-8315-ECD3FBDFBA2C}`
 
 ## 7. Versions-Historie
+
+- 1.18 @ 09.12.2022 09:14
+  - Neu: Bezeichnung des Webhook kann angepasst werden
+  - update submodule CommonStubs
 
 - 1.17.1 @ 07.10.2022 13:59
   - update submodule CommonStubs

@@ -124,14 +124,9 @@ class LuftdatenPublic extends IPSModule
         }
 
         $formElements[] = [
-            'type' => 'CheckBox',
-            'name' => 'module_disable', 'caption' => 'Disable instance'
-        ];
-
-        $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'sensor_id',
-            'caption' => 'Sensor-ID'
+            'type'    => 'CheckBox',
+            'name'    => 'module_disable',
+            'caption' => 'Disable instance',
         ];
 
         $formElements[] = [
@@ -139,7 +134,13 @@ class LuftdatenPublic extends IPSModule
             'suffix'  => 'Seconds',
             'minimum' => 0,
             'name'    => 'update_interval',
-            'caption' => 'Update interval'
+            'caption' => 'Update interval',
+        ];
+
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'sensor_id',
+            'caption' => 'Sensor-ID',
         ];
 
         $formElements[] = [
@@ -148,52 +149,52 @@ class LuftdatenPublic extends IPSModule
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_sds',
-                    'caption' => 'SDS011'
+                    'caption' => 'SDS011',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_pms',
-                    'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003'
+                    'caption' => 'PMS1003, PMS3003, PMS5003, PMS6003, PMS7003',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_dht22',
-                    'caption' => 'DHT22'
+                    'caption' => 'DHT22',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_htu21d',
-                    'caption' => 'HTU21D'
+                    'caption' => 'HTU21D',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_ppd',
-                    'caption' => 'PPD42NS'
+                    'caption' => 'PPD42NS',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_bmp180',
-                    'caption' => 'BMP180'
+                    'caption' => 'BMP180',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_bmp280',
-                    'caption' => 'BMP280'
+                    'caption' => 'BMP280',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_bme280',
-                    'caption' => 'BME280'
+                    'caption' => 'BME280',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_ds18b20',
-                    'caption' => 'DS18B20'
+                    'caption' => 'DS18B20',
                 ],
                 [
                     'type'    => 'CheckBox',
                     'name'    => 'sensor_dnms',
-                    'caption' => 'DNMS'
+                    'caption' => 'DNMS',
                 ],
             ],
             'caption' => 'Sensor',
