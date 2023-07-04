@@ -130,6 +130,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.19 @ 04.07.2023 14:44
+  - update submodule CommonStubs
+    - Absicherung bei Zugriff auf Objekte und Inhalte
+    - Vorbereitung auf IPS 7 / PHP 8.2
+
 - 1.18 @ 09.12.2022 09:14
   - Neu: Bezeichnung des Webhook kann angepasst werden
   - update submodule CommonStubs
