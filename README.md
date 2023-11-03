@@ -130,7 +130,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.20 @ 19.09.2023 16:50
+- 1.20 @ 03.11.2023 11:06
   - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"
   - update submodule CommonStubs
 
