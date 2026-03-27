@@ -130,6 +130,12 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.23 @ 27.03.2026 14:18
+  - Verbesserung: Absicherung der Eingabe des WebHook durch einen regulären Ausdruck
+  - Fix: Anpassung für IPS 9
+  - interne Änderung
+  - update submodule CommonStubs
+
 - 1.22 @ 02.01.2025 14:28
   - interne Änderung
   - update submodule CommonStubs

@@ -152,9 +152,10 @@ class LuftdatenLocal extends IPSModule
         }
 
         $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'hook',
-            'caption' => 'Webhook',
+            'type'     => 'ValidationTextBox',
+            'name'     => 'hook',
+            'validate' => $this->RegexpPattern('hook', true),
+            'caption'  => 'Webhook',
         ];
 
         $formElements[] = [
