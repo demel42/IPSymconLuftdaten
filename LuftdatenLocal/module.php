@@ -38,6 +38,14 @@ class LuftdatenLocal extends IPSModule
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
+    public function Destroy()
+    {
+        if (IPS_InstanceExists($this->InstanceID) == false) {
+            $this->CleanupHook();
+        }
+        parent::Destroy();
+    }
+
     private function CheckModuleConfiguration()
     {
         $r = [];
